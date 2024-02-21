@@ -1,0 +1,44 @@
+---
+import { Icon } from "astro-icon/components";
+import { Badge } from "./ui/react/badge";
+import { Input } from "./ui/react/input";
+import Text from "./Text.astro";
+import { Switch } from "./ui/react/switch";
+
+const { title } = Astro.props;
+---
+
+<div class="flex ml-20 h-20 bg-white dark:bg-natural w-[calc(100%-5rem)] py-2 border-b dark:border-b-primary fixed z-50">
+  <div class="flex w-full gap-x-20 justify-between text-foreground pt-4 px-4">
+    <div class="w-2/5"><h1 class="text-2xl font-bold">{`Pillar Bids/Fx`}</h1></div>
+    <div class="w-full flex px-2 py-1 rounded-md bg-slate-100 dark:bg-natural/90 text-sm">
+      <Icon
+        name="majesticons:search-line"
+        size={40}
+        class="text-foreground p-2"
+      />
+      <Input
+        type="text"
+        placeholder="Search..."
+        className="bg-transparent w-full focus:border-dotted pl-4 focus:outline-none"
+      />
+    </div>
+    <!-- <Badge
+      className="flex space-x-2 bg-slate-100 dark:bg-natural dark:hover:bg-natural hover:bg-slate-100 text-foreground border border-t-primary"
+    >
+        <Icon name="majesticons:money" size={20} />
+        <Text content="50,000" />
+    </Badge> -->
+
+    <div class="flex w-full gap-10 items-center bg-transparent text-foreground justify-end">
+                <Icon name="majesticons:bell" size={24} />
+                <div class="flex space-x-3 items-center">
+                    <Switch client:load/>
+                    <span class="w-8 h-8 rounded-full bg-slate-500" />
+                    <span class="text-sm font-medium">Daniel</span>
+                </span>
+                </div>
+            </div>
+
+  </div>
+</div>

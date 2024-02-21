@@ -1,7 +1,95 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Card from '@/components/Card.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Text  from '@/components/Text.astro';
+import { Button } from '@/components/ui/react/button';
+import { isLoggedIn } from '@/utilities/helpers/verifyUser';
+import { toast } from "sonner"
+import { Image } from 'astro:assets';
+
+const res = await fetch('https://picsum.photos/v2/list?limit=5');
+const imageData = await res.json();
+
+const cookie = Astro.cookies.get(import.meta.env.COOKIE_NAME)?.value;
+const loggedIn = isLoggedIn(cookie);
+
+if(!loggedIn){
+  return Astro.redirect('/auth/login');
+};
+
 ---
 
-<Layout title="Dashboard">
+<DashboardLayout title="Dashboard">
 
-</Layout>
+    <div class="flex gap-x-4 ml-20 w-[calc(100%-5rem)] px-4 mt-16 mb-8">
+            <div class="flex flex-col space-y-6 w-4/6 h-full relative">
+                <!-- Banner -->
+                <div class="flex h-80 justify-between mt-12 bg-slate-100 dark:bg-natural p-8 rounded-xl">
+                    <span class="flex flex-col w-2/3 space-y-8 pr-8">
+                        <Text type='h3' content="Gain real-time access to auctions and biddings on Pillar Bids. Take the project home." className="text-3xl" />
+                        <Button className='bg-primary w-36'>
+                            Explore now!
+                        </Button>
+                    </span>
+                    <img src="/manny.png" class="absolute right-6 top-16" alt="dashboard"/>
+                </div>
+
+                <!-- Top vendors -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <Text type="p" content="Top vendors" className="font-bold"/>
+                        <Text type="small" content="See all" />
+                    </div>
+                    <div class="flex justify-between h-32 border border-primary rounded-tr-3xl p-3 rounded-bl-3xl">
+                        {imageData.map(({download_url, id, width, height}: {download_url: string; id: string; width: number, height: number}) => <div class="rounded-xl w-32 h-full dark:bg-natural bg-slate-100">
+                            <Image src={download_url} alt={id} class="p-4 items-center justify-center mx-auto object-fil object-cover" height={height} width={width} style={{
+                                borderRadius: "50px",
+                                width: "100px",
+                                height: "100px",
+                                objectFit: "fill"
+                            }} /> 
+                        </div>
+                        )}
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <Text type="p" content="Trending bids" className="font-bold"/>
+                        <Text type="small" content="" />
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-y-6 gap-x-4">
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+                        <Card href='/' title='HEr', body='Wakakaka' />
+
+                    </div>
+
+                    <div class=" flex mx-auto justify-center self-center">
+                        <Button variant='ghost' className='w-36 dark:text-foreground'>
+                           See all
+                        </Button>
+                    </div>
+
+                    <div class="pt-8">
+                        <Text type="small" content="Copyright © 2024. Pillar Oil Limited."/>
+                    </div>
+                </div>
+
+                
+            </div>
+
+            <!-- left side -->
+            <div class="flex w-[calc(30%-1rem)] mr-4 h-auto mt-12 fixed right-0 flex-end">
+               <div class="w-full bg-slate-100 dark:bg-natural p-4 rounded-xl relative">
+                <Card href='/' title='HEr', body='Wakakaka' featured={true} />
+               </div>
+            </div>
+    </div>
+
+</DashboardLayout>

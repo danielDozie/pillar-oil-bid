@@ -1,3 +1,6 @@
-# pillar-oil-bid
+# Pillar Bid
 
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/danielDozie/pillar-oil-bid)
+A new intuitive product from pillar oil limited for project bidding and real time monitoring.
+
+
+More information will be added here to document the process of installation and usage.

@@ -1,0 +1,67 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Bid {
+  id              Int        @id @default(autoincrement())
+  projectId       Int        @map("project_id")
+  contractorId    Int        @map("contractor_id")
+  amount          Float
+  status          String
+  submissionDate  DateTime   @map("submission_date")
+  lastUpdatedDate DateTime   @updatedAt @map("last_updated")
+  project         Project    @relation(fields: [projectId], references: [id])
+  contractor      Contractor @relation(fields: [contractorId], references: [id])
+
+  @@index([projectId], name: "idx_bid_projectId")
+  @@index([contractorId], name: "idx_bid_contractorId")
+  @@map("bid")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  owner       String
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  status      String
+  bids        Bid[]
+
+  @@index([owner], name: "idx_project_owner")
+  @@map("project")
+}
+
+model Contractor {
+  id          Int    @id @default(autoincrement())
+  firstName       String?  @map("first_name")
+  lastName        String?  @map("last_name")
+  email        String? @unique
+  contactInfo String? @map("contact_info")
+  rating      Int?
+  avatarUrl   String? @map("avatar_url")
+  bidBalance String? @map("bid_balance")
+  userId      Int?  
+  user        User?   @relation(fields: [userId], references: [id])
+  bids        Bid[]
+
+  @@unique([userId], name: "user_id")
+  @@map("contractor")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  password   String
+  role       String?     @default("user")
+  verified   Boolean     @default(false)
+  Contractor Contractor?
+
+  @@map("user")
+}

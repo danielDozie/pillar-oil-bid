@@ -4,6 +4,9 @@ const config = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   prefix: '',
   theme: {
+    fontFamily: {
+      Inter: ['Inter', '"San-Serif"']
+    },
     container: {
       center: true,
       padding: '2rem',
@@ -18,6 +21,10 @@ const config = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        "deep-blue": '#020d3b',
+        "darker-blue": '#000825',
+        "purple-border": '#322c6c',
+        "natural": '#0a1745',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
