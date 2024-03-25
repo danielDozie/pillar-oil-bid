@@ -3,9 +3,6 @@ import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import icon from "astro-icon";
 import node from "@astrojs/node";
-import cloudflare from "@astrojs/cloudflare";
-import vercel from "@astrojs/vercel/serverless";
-
 
 // https://astro.build/config
 export default defineConfig({
