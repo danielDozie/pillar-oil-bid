@@ -7,11 +7,12 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "deno run --allow-net --allow-read --allow-env ./dist/server/entry.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^9.2.0",
+    "@astrojs/deno": "^5.0.1",
     "@astrojs/node": "^8.2.5",
     "@astrojs/react": "^3.0.10",
     "@astrojs/tailwind": "^5.1.0",
