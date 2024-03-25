@@ -1,32 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OtpInput from "@/components/ui/react/otp";
 import { Button } from "./button";
+import { toast } from "sonner";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import Cookies from "js-cookie"
 
-const OtpComponent = ({ otpValue }: { otpValue: number }) => {
+const OtpComponent = ({ otpValue, otpType }: { otpValue: number, otpType?: string }) => {
     const [otp, setOtp] = useState<number>(0);
+    const [loading, setLoading] = useState(false)
 
     const handleOtpChange = (value: number) => {
         setOtp(value);
     };
 
+    
     //validate otp input
     const validateOtp = async () => {
-        if (otp === otpValue) {
-            const data = await fetch(`http://localhost:4321/api/auth/user-verified`, {
-                method: "POST"
-            });
-            const res = data;
-            if (res.status === 200) {
-                window.location.href = res.url;
-            }
-        } else {
-            /// do something else
-            console.log("Otp Error")
+        setLoading(true)
+
+        switch (otpType) {
+            case "pass-reset-otp":
+                if (otp === otpValue) {
+                    document.cookie.split(";").forEach(function (c) {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+                    window.location.href = '/auth/login';
+                }
+                break;
+            
+            case "approve-sign-in":
+                if (otp === otpValue) {
+                    Cookies.set('otp-verified', 'true', { path: '/' });
+                    Cookies.remove("otp-type", { path: '/' });
+                    window.location.replace('/u');
+                }
+                break;
+            default:
+                if (otp === otpValue) {
+                    const data = await fetch(`/api/auth/user-verified`, {
+                        method: "POST"
+                    });
+                    const res = data;
+                    if (res.status === 200) {
+                        setLoading(false)
+                        toast.success("OTP Verified")
+                        setTimeout(() => {
+                            window.location.href = res.url;
+                        }, 2000);
+                    }
+                }
+                else {
+                    /// do something else
+                    setLoading(false);
+                    toast.error("OTP Verification failed")
+                }
+                break;
         }
+
     }
 
     const resendOtp = async () => {
-        const data = await fetch(`http://localhost:4321/api/auth/resend-otp`);
+        const data = await fetch(`/api/auth/resend-otp`);
         const res = await data.json();
 
         if (res?.message) {
@@ -50,6 +84,7 @@ const OtpComponent = ({ otpValue }: { otpValue: number }) => {
 
                 <div className="flex flex-end justify-end">
                     <Button className="px-12 bg-primary" onClick={validateOtp}>
+                        {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                         Verify
                     </Button>
                 </div>

@@ -1,0 +1,39 @@
+---
+import { Headers } from "@/constants";
+import OperatorLayout from "../../../../../layouts/OperatorLayout.astro";
+import {ManageVendorComponent} from "@/components/ui/react/manage-vendor-component"
+
+const {vendor} = Astro.params;
+//@ts-ignore
+const vendorData = await fetch(`${process.env.API_ENDPOINT}/v1/vendors/manage-vendor/?${new URLSearchParams({ vendor }).toString()}`, {heaaders: Headers});
+const {vendor: result} = await vendorData.json();
+
+---
+
+<OperatorLayout title={`Vendor | `+ result?.companyName}>
+  <ManageVendorComponent result={result} />
+</OperatorLayout>
+
+
+<script>
+  const handleEdit = ()  => {
+    const inputFields = document.querySelectorAll('input');
+    const textareaField = document.querySelector('textarea');
+    const SaveButton = document.querySelector('#save');
+
+    inputFields.forEach((input) => {
+      input.toggleAttribute('readonly', !input.hasAttribute('readonly'));
+    });
+    SaveButton?.toggleAttribute('disabled', !SaveButton?.hasAttribute('disabled'));
+    textareaField?.toggleAttribute('readonly', !textareaField?.hasAttribute('readonly'));
+
+
+    var EditText = document.querySelector('#edit');
+    //@ts-ignore
+    EditText.textContent = SaveButton?.hasAttribute('disabled') ? "Edit" : "Editing...";
+  }
+
+  const EditButton = document.querySelector('#edit');
+  EditButton?.addEventListener('click', handleEdit)
+  
+</script>

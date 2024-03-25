@@ -6,10 +6,12 @@ import jwt from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
 
-export const POST: APIRoute = async ({ request, redirect, cookies}) => {
-    const data = await request.formData();
-    const email = data.get('email');
-    const password = data.get('password');
+export const POST: APIRoute = async ({ request, redirect, cookies }) => {
+    let x_pol_rfx_secret = process.env.X_POL_RFX_SECRET;
+    request.headers.set("x-pol-rfx-secret", `${x_pol_rfx_secret}`);
+    
+    const data = await request.json();
+    const { email, password } = data;
 
     const user = await prisma.user.findFirst({
         where: {
@@ -26,8 +28,14 @@ export const POST: APIRoute = async ({ request, redirect, cookies}) => {
         });
         cookies.set(process.env.COOKIE_NAME, token, { path: "/", expires: new Date(Date.now() + 60 * 60 * 24 * 1000), httpOnly: true, maxAge: 60 * 60 * 24 });
 
-        return redirect('/dashboard')
+        return new Response(JSON.stringify({
+            message: "Login successful",
+        }), { status: 200 })
     }
 
-    return redirect('/auth/login')
+    return new Response(JSON.stringify({
+        message: "Login failed. Try again.",
+    }), {
+        status: 400
+    })
 };

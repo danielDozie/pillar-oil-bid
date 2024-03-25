@@ -30,7 +30,7 @@ export const GET: APIRoute = async ({request, cookies, redirect}) => {
 
         if (user?.verified) {
             generateJWT({ email: data?.email, cookies });
-            return redirect("/dashboard");
+            return redirect("/u");
         } else {
             //create the user as a new user with a generated password
             const generatedPassword = Math.random().toString(36).slice(-8);
@@ -45,8 +45,7 @@ export const GET: APIRoute = async ({request, cookies, redirect}) => {
                     Contractor: {
                         create: {
                             email: data?.email as string,
-                            firstName: data?.given_name,
-                            lastName: data?.family_name,
+                            companyName: `${data?.given_name + " " + data?.family_name}`,
                             avatarUrl: data?.picture
                         }
                     }
@@ -55,7 +54,7 @@ export const GET: APIRoute = async ({request, cookies, redirect}) => {
 
             if (user?.email && user.verified) {
                 generateJWT({ email: user?.email, cookies });
-                return redirect("/dashboard")
+                return redirect("/u")
             }
 
         }

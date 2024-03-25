@@ -1,14 +1,11 @@
+import { transporter } from '@/utilities/helpers/emailTransporter';
+import { prisma } from '@/utilities/helpers/prismaInstace';
 import type { APIRoute } from 'astro';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 
 // Generate a salt for hashing passwords
 const salt = bcrypt.genSaltSync(10);
-
-// Initialize Prisma Client to interact with the database
-const prisma = new PrismaClient();
 
 /**
  * Handles the POST request to sign up a new user.
@@ -17,11 +14,13 @@ const prisma = new PrismaClient();
  * @returns A redirect response to the root path '/'.
  */
 export const POST: APIRoute = async ({ request, redirect, cookies }) => {
-    // Parse the form data from the request
-    const data = await request.formData();
-    const email = data.get('email');
+    let x_pol_rfx_secret = process.env.X_POL_RFX_SECRET;
+    request.headers.set("x-pol-rfx-secret", `${x_pol_rfx_secret}`);
+    
+    const data = await request.json();
+    const { email, password: pass } = data;
     // Hash the password using bcrypt
-    const password = bcrypt.hashSync(data.get('password'), salt);
+    const password = bcrypt.hashSync(pass, salt);
 
     try {
         // Create a new user in the database
@@ -29,12 +28,6 @@ export const POST: APIRoute = async ({ request, redirect, cookies }) => {
             data: {
                 email: email as string,
                 password: password as string,
-                // Also create a related Contractor entry
-                Contractor: {
-                    create: {
-                        email: email as string
-                    }
-                }
             },
         });
 
@@ -47,21 +40,10 @@ export const POST: APIRoute = async ({ request, redirect, cookies }) => {
         //do OTP verification before redirect!!!
         const otp = Math.floor(1000 + Math.random() * 9000); // Generate 4 digit OTP
 
-        // Create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: process.env.MAIL_USERNAME, // generated ethereal user
-                pass: process.env.MAIL_PASSWORD, // generated ethereal password
-            },
-        });
-
         
         // Send mail with defined transport object
         let info = await transporter.sendMail({
-            from: `"Pillar Bids" <no-reply@pillarbid.com>`, // Sender address
+            from: `"Pillar Bids" <${process.env.MAIL_USERNAME}>`, // Sender address
             to: email, // List of receivers
             subject: "Verify your account", // Subject line
             text: `Your OTP is ${otp}`, // Plain text body
@@ -80,12 +62,14 @@ export const POST: APIRoute = async ({ request, redirect, cookies }) => {
         // Save OTP in cookies with a TTL of 15 minutes
         cookies.set('otp', JSON.stringify(otp), { path: "/", maxAge: 60 * 15, httpOnly: true });
         if (info?.messageId) {
-            return redirect('/auth/confirm-otp');
+            return new Response(JSON.stringify({ message: 'Signup successful' }), {
+                status: 200,
+            });
         }
-
     } catch (error) {
-        // Log the error to the console for debugging
-        console.error("Signup error:", error);
+        return new Response(JSON.stringify({ message: 'Signup failed. Check email and try again.' }), {
+            status: 400,
+        });
     }
 
     // Redirect to the root path after successful signup or error

@@ -24,7 +24,9 @@ const config = {
         "deep-blue": '#020d3b',
         "darker-blue": '#000825',
         "purple-border": '#322c6c',
-        "natural": '#0a1745',
+        "natural-old": '#0a1745',
+        "natural": '#27292d',
+        "background-color": "#1b1d22",
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',

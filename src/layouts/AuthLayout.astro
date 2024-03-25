@@ -2,11 +2,13 @@
 import {Toaster} from "@/components/ui/react/sonner"
 import "@/styles/global.css";
 import { ViewTransitions } from "astro:transitions";
+
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+
 ---
 
 <!doctype html>
@@ -18,7 +20,8 @@ const { title } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-	<ViewTransitions />
+	<!-- <ViewTransitions /> -->
+	<Toaster client:load richColors position="top-right" />
   </head>
   <body class="w-full justify-center bg-slate-100 ">
     <main>
@@ -26,7 +29,7 @@ const { title } = Astro.props;
 		<div class="w-full hidden md:flex md:w-1/2 bg-[url(/landing-bg.jpg)] bg-cover z-10 !text-white">
 			<div class="h-full p-8 flex flex-col justify-between">
 				<h1 class="font-bold text-3xl">
-					Piller Bid.
+					POL RFX.
 				</h1>
 				<span class="!text-slate-300">
 					<p class="">
@@ -43,6 +46,6 @@ const { title } = Astro.props;
 		</div>
 	</div>
     </main>
-	<Toaster client:load />
+	<Toaster client:load richColors position="top-right" />
   </body>
 </html>

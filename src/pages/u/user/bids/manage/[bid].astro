@@ -1,0 +1,28 @@
+---
+import UserLayout from "../../../../../layouts/UserLayout.astro";
+import Text from "../../../../../components/Text.astro";
+import { BidPlacementForm } from "../../../../../components/ui/react/bid-placement-form";
+import {Headers} from "@/constants"
+
+//@ts-ignore
+const {bid} = Astro.params;
+
+const params = new URLSearchParams();
+params.append("bidId", bid!);
+const res = await fetch(`${process.env.API_ENDPOINT}/v1/bids/manage-bid?${params.toString()}`, {headers: Headers});
+const result = await res.json();
+
+---
+<UserLayout title="Manage bid">
+  <div
+    class="flex flex-col bg-slate-100 dark:bg-natural gap-x-4 ml-24 w-[calc(100%-7rem)] p-8 mt-24 mb-8 h-full rounded-2xl"
+  >
+    <div class="flex justify-between">
+      <Text type="p" content="Bid Placement" className="!font-bold text-xl" />
+      <Text type="p" content={`Not Placed`} className=`!font-bold text-lg !text-red-600` />
+    </div>
+    <div class="my-12">
+      <BidPlacementForm bidData={result?.bid} client:only />
+    </div>
+  </div>
+</UserLayout>

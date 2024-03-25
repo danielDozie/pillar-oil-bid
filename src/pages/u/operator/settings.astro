@@ -1,0 +1,73 @@
+---
+import { Input } from "@/components/ui/react/input";
+import OperatorLayout from "../../../layouts/OperatorLayout.astro";
+---
+
+<OperatorLayout title="Settings">
+<div class="flex flex-col gap-x-4 ml-24 w-[calc(100%-7rem)] p-8 mt-24 mb-8 h-full rounded-2xl">
+    <h1 class="text-xl font-bold mb-4 text-foreground">Settings</h1>
+    <div class="flex flex-col my-8 gap-y-4">
+        <div class="flex justify-between gap-x-4 w-full">
+            <span class="w-1/2">
+                <h1 class="text-[14px] font-bold mb-4 text-foreground">SMTP Settings</h1>
+                <label for="smtp" class="block text-sm font-medium text-gray-500">SMTP Host</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="smtp.example.com"/>
+                <label for="smtp" class="block text-sm font-medium text-gray-500">SMTP Username</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="username@semtphost.com"/>
+                <label for="smtp" class="block text-sm font-medium text-gray-500">SMTP Port</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="465"/>
+                <label for="smtp" class="block text-sm font-medium text-gray-500">SMTP Password</label>
+                <Input type="password" className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="smtp.example.com"/>
+            </span>
+            <span class="w-1/2 relative">
+                <h1 class="text-[14px] font-bold mb-4 text-foreground">APP Settings</h1>
+                <label for="app" class="block text-sm font-medium text-gray-500">App Name</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="POL RFX"/>
+                <label for="app" class="block text-sm font-medium text-gray-500">App Url</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="http://localhost:4321"/>
+                <label for="app" class="block text-sm font-medium text-gray-500 text-foreground">App Logo</label>
+                <Input type="file" id="app-image" className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="POL RFX"/>
+
+                <img src="" width="80px" height="80px" alt="app-logo" id="image-preview" class="absolute top-1 right-5"/>
+            </span>
+        </div>
+        <hr />
+        <div class="flex justify-between gap-x-4 w-full mt-8">
+            <span class="w-1/2">
+                
+                <label for="option1" class="block text-sm font-medium text-gray-500">Option 1</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="Option 1" readOnly/>
+            </span>
+            <span class="w-1/2">
+                <label for="option2" class="block text-sm font-medium text-gray-500">Option 2</label>
+                <Input className="text-foreground font-medium text-lg w-full border-0 ring-transparent shadow-none focus-visible:outline-none" defaultValue="Option 2" readOnly/>
+            </span>
+        </div>
+    </div>
+</div>
+</OperatorLayout>
+
+
+
+<script>
+const handleFileInputChange = async (event) => {
+   
+    const file = event.target.files[0];
+    const imageUrl = URL.createObjectURL(file);
+    
+    // Display image preview
+    const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+    imagePreview.src = imageUrl;
+
+    await fetch(`http://localhost:4321/api/uploads/settings`, {
+        method: "POST",
+        headers: {
+            contentType: "application/json"
+        },
+        body: JSON.stringify({imageUrl})
+    })
+};
+
+document.querySelector('#app-image').addEventListener('change', handleFileInputChange);
+
+</script>

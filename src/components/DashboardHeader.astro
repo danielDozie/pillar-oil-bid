@@ -1,44 +1,56 @@
 ---
 import { Icon } from "astro-icon/components";
-import { Badge } from "./ui/react/badge";
 import { Input } from "./ui/react/input";
 import Text from "./Text.astro";
 import { Switch } from "./ui/react/switch";
+import { AvatarComponent } from "@/components/ui/react/avatar-component";
 
-const { title } = Astro.props;
+const { role } = Astro.props;
+//@ts-ignore
+const companyName = Astro.locals?.user?.companyName;
 ---
 
-<div class="flex ml-20 h-20 bg-white dark:bg-natural w-[calc(100%-5rem)] py-2 border-b dark:border-b-primary fixed z-50">
+<div
+  class="flex ml-20 h-20 bg-white dark:bg-natural w-[calc(100%-5rem)] py-2 border-b dark:border-b-slate-700 fixed z-50"
+>
   <div class="flex w-full gap-x-20 justify-between text-foreground pt-4 px-4">
-    <div class="w-2/5"><h1 class="text-2xl font-bold">{`Pillar Bids/Fx`}</h1></div>
-    <div class="w-full flex px-2 py-1 rounded-md bg-slate-100 dark:bg-natural/90 text-sm">
+    <div class="w-2/5 flex gap-x-2 justify-start items-center">
+      <img src="/pillaroilLogo.png" width={20} height="auto" alt="logo" />
+      <h1 class="text-xl font-bold">{`POL RFX`}</h1>
+    </div>
+    <div
+      class="w-full flex px-2 py-1 rounded-md bg-slate-100 dark:bg-natural/90 border dark:border-slate-100 text-sm"
+    >
       <Icon
         name="majesticons:search-line"
         size={40}
         class="text-foreground p-2"
       />
       <Input
-        type="text"
+        type="search"
         placeholder="Search..."
         className="bg-transparent w-full focus:border-dotted pl-4 focus:outline-none"
       />
     </div>
-    <!-- <Badge
-      className="flex space-x-2 bg-slate-100 dark:bg-natural dark:hover:bg-natural hover:bg-slate-100 text-foreground border border-t-primary"
+    <div
+      class="flex px-6 bg-slate-100 dark:bg-natural dark:hover:bg-natural hover:bg-slate-100 text-foreground border border-t-primary self-center rounded-lg"
     >
-        <Icon name="majesticons:money" size={20} />
-        <Text content="50,000" />
-    </Badge> -->
+      <Text type="h1" content={role} className="!font-semibold !text-sm py-1" />
+    </div>
 
-    <div class="flex w-full gap-10 items-center bg-transparent text-foreground justify-end">
-                <Icon name="majesticons:bell" size={24} />
-                <div class="flex space-x-3 items-center">
-                    <Switch client:load/>
-                    <span class="w-8 h-8 rounded-full bg-slate-500" />
-                    <span class="text-sm font-medium">Daniel</span>
-                </span>
-                </div>
-            </div>
-
+    <div
+      class="flex w-full gap-10 items-center bg-transparent text-foreground justify-end"
+    >
+      <Icon name="majesticons:bell" size={24} />
+      <div class="flex gap-x-4 items-center">
+        <Switch client:load />
+        <AvatarComponent
+          alt={`name`}
+          src={``}
+          fallbackText={companyName}
+          client:load
+        />
+      </div>
+    </div>
   </div>
 </div>

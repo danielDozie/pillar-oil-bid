@@ -9,8 +9,9 @@ interface JwtPayload {
 let email: string;
 
 //resend otp
-export const GET: APIRoute = async ({ cookies, redirect }) => {
-
+export const GET: APIRoute = async ({ cookies, request }) => {
+    let x_pol_rfx_secret = process.env.X_POL_RFX_SECRET;
+    request.headers.set("x-pol-rfx-secret", `${x_pol_rfx_secret}`);
     try {
         const token = cookies.get(import.meta.env.COOKIE_NAME!)?.value!;
         const decodedToken = jwt.verify(token, import.meta.env.JWT_SECRET) as JwtPayload;
