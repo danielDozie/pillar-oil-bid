@@ -4,8 +4,8 @@ import tailwind from '@astrojs/tailwind';
 import icon from "astro-icon";
 import node from "@astrojs/node";
 import cloudflare from "@astrojs/cloudflare";
-
 import vercel from "@astrojs/vercel/serverless";
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,5 +13,5 @@ export default defineConfig({
   integrations: [react(), tailwind({
     applyBaseStyles: false
   }), icon()],
-  adapter: vercel()
+  adapter: cloudflare()
 });
