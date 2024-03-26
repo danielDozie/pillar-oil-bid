@@ -24,3 +24,4 @@ pnpm-debug.log*
 .flaskenv*
 !.env.project
 !.env.vault
+.vercel
