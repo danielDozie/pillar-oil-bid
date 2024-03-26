@@ -6,7 +6,6 @@ export const GET: APIRoute = async ({ request }) => {
     
     const vendorId = new URL(request.url).searchParams.get('vendor')
 
-    console.log({ vendorId})
     try {
         const vendor = await prisma.contractor.findUnique({
             where: {

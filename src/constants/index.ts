@@ -16,7 +16,7 @@ const PROTECTED_ROUTE = [
     "/api/v1/fx",
     "/api/v1/fx/add-new-fx",
     "/api/v1/fx/fx-bidders",
-    "/api/v1/fx/manage",
+    "/api/v1/fx/manage-fx",
     "/api/v1/tenders",
     "/api/v1/tenders/add-tender",
     "/api/v1/tenders/send-tender",

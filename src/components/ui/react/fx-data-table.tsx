@@ -38,7 +38,8 @@ import {
     TableRow,
 } from "@/components/ui/react/table"
 import { Badge } from "./badge"
-import { formatDate, formatTime } from "@/utilities/helpers/time-formatter"
+import { formatDate, formatTime } from "@/utilities/helpers/time-formatter";
+import { formatCurrency } from "@/utilities/helpers/formatCurrency";
 
 export type FX = {
     id: number;
@@ -94,10 +95,10 @@ export function FXDataTable({ data }: { data: any }) {
             ),
         },
         {
-            accessorKey: "currency",
-            header: "Currency",
+            accessorKey: "amount",
+            header: "Amount",
             cell: ({ row }) => (
-                <div className="uppercase">{row.original.currency}</div>
+                <div className="uppercase">{row.original.currency + " " + formatCurrency(Number(row.original.amount))}</div>
             ),
         },
         {

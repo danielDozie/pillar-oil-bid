@@ -7,11 +7,13 @@ import { Input } from "../../../../../components/ui/react/input";
 import { Textarea } from "../../../../../components/ui/react/text-area";
 import { formatTime } from "../../../../../utilities/helpers/time-formatter";
 import { Headers } from "@/constants";
+import {formatCurrency} from "../../../../../utilities/helpers/formatCurrency"
 
 const { fx } = Astro.params;
 //@ts-ignore
 const res = await fetch(
-  `${process.env.API_ENDPOINT}/v1/fx/manage-fx/?${new URLSearchParams({ fx }).toString()}`, {headers: Headers}
+  `${process.env.API_ENDPOINT}/v1/fx/manage-fx/?${new URLSearchParams({ fx }).toString()}`,
+  { headers: Headers }
 );
 const data = await res.json();
 ---
@@ -43,11 +45,13 @@ const data = await res.json();
                   <label
                     for="title"
                     class="block text-sm font-medium text-gray-500"
-                    >Currency</label
+                    >Amount</label
                   >
                   <Input
                     className="text-foreground font-medium text-lg w-full"
-                    defaultValue={data?.fx?.currency.toUpperCase()}
+                    defaultValue={data?.fx?.currency.toUpperCase() +
+                      " " +
+                      formatCurrency(Number(data?.fx?.amount))}
                     readOnly
                   />
                 </span>
@@ -150,9 +154,11 @@ const data = await res.json();
                   data?.fx?.FxRecipients.map((item) => (
                     <div class="flex flex-col">
                       <p class="text-sm font-medium py-1">
-                        {(item?.fxBidder?.firstName && item?.fxBidder?.lastName) ? item?.fxBidder?.firstName +
-                          " " +
-                          item?.fxBidder?.lastName : "User Info Missing"}
+                        {item?.fxBidder?.firstName && item?.fxBidder?.lastName
+                          ? item?.fxBidder?.firstName +
+                            " " +
+                            item?.fxBidder?.lastName
+                          : "User Info Missing"}
                       </p>
                     </div>
                   ))

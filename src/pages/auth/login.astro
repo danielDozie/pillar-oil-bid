@@ -2,6 +2,12 @@
 import AuthLayout from "@/layouts/AuthLayout.astro";
 import LoginForm from "@/components/ui/react/login-form";
 const token = process.env.X_POL_RFX_SECRET;
+
+//@ts-ignore
+const isLoggedIn = Astro.locals.isLoggedIn;
+if (isLoggedIn) {
+  return Astro.redirect('/u');
+}
 ---
 
 <AuthLayout title="Login | POL RFX">

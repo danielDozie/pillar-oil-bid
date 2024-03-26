@@ -8,11 +8,11 @@ export const AvatarComponent = ({ src, alt, fallbackText }) => {
             <HoverCardTrigger>
                 <Avatar>
                     <AvatarImage src={src} alt={alt} />
-                    <AvatarFallback>{fallbackText.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{fallbackText?.charAt(0) ?? "Fx"}</AvatarFallback>
                 </Avatar>
             </HoverCardTrigger>
             <HoverCardContent>
-                {fallbackText}
+                {fallbackText ?? `Fx Admin`}
             </HoverCardContent>
         </HoverCard>
 

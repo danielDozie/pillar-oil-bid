@@ -12,7 +12,6 @@ export const validateEndpoints = defineMiddleware(async ({ request, redirect}, n
             if (!access) {
                 return redirect('/forbidden');
             }
-            
         }
     } catch (error) {
         const message = error.message === "Forbidden" ? "Forbidden" : "Access to this resource is forbidden without proper authorization.";

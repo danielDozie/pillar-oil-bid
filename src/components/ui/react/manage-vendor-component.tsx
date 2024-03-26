@@ -17,13 +17,13 @@ export function ManageVendorComponent({ result }: any) {
                       <Input type="email" id="email" name="email" className="input text-xl font-semibold text-foreground" placeholder="Enter email" value={result?.email} readOnly />
 
                       <label htmlFor="phone" className="block text-sm font-medium text-gray-500">Phone Number</label>
-                      <Input type="tel" id="phone" name="business_phone" className="input text-xl font-semibold text-foreground" placeholder="Enter phone number" value={result?.businessPhone} readOnly />
+                      <Input type="tel" id="phone" name="business_phone" className="input text-xl font-semibold text-foreground" placeholder="Enter phone number" value={result?.businessPhone ?? ""} readOnly />
 
                       <label htmlFor="phone" className="block text-sm font-medium text-gray-500">Home phone</label>
-                      <Input type="tel" id="phone" name="home_phone" className="input text-xl font-semibold text-foreground" placeholder="Enter phone number" value={result?.homePhone} readOnly />
+                      <Input type="tel" id="phone" name="home_phone" className="input text-xl font-semibold text-foreground" placeholder="Enter phone number" value={result?.homePhone ?? ""} readOnly />
 
                       <label htmlFor="address" className="block text-sm font-medium text-gray-500">Address</label>
-                      <Textarea id="address" name="address" className="input text-xl font-semibold text-foreground" placeholder="Enter address" value={result?.address} readOnly />
+                      <Textarea id="address" name="address" className="input text-xl font-semibold text-foreground" placeholder="Enter address" value={result?.address ?? ""} readOnly />
 
                       <div className="space-x-4">
                           <Button type="submit" id="save" className="btn bg-primary text-white px-12 py-4 rounded" disabled>Save</Button>

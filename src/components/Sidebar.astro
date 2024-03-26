@@ -4,8 +4,6 @@ import Text from "./Text.astro";
 
 const {upperMenu, lowerMenu} = Astro.props;
 const url = Astro.url.pathname;
-
-
 ---
 
 <nav class=" w-20 flex flex-col bg-slate-100 dark:bg-natural border-r-0 border-purple-border fixed h-full">
@@ -15,7 +13,7 @@ const url = Astro.url.pathname;
       {upperMenu.map(({name, icon, link}) => <span class="flex flex-col items-center justify-center group">
         <Text type="p" content={name}  className={`font-bold text-[14px] invisible group-hover:visible group-hover:hover:visible ${url === link && 'visible'} `} />
         <a href={link}>
-          <Icon name={icon} size={24} class={`${url === link && 'text-primary'}`} />
+          <Icon name={icon} size={24} class={`${url.includes(link) ? 'text-primary' : ''}`} />
         </a>
       </span>)
       }
