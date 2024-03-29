@@ -7,7 +7,7 @@ export const GET: APIRoute = async () => {
 
     const tenders = await prisma.tender.findMany({
         where: {
-            startDate: { lt: currentDate },
+            startDate: { lt: currentDate.toISOString() },
             status: "pending"
         },
     });

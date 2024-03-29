@@ -2,27 +2,40 @@
 import UserLayout from "../../../../../layouts/UserLayout.astro";
 import Text from "../../../../../components/Text.astro";
 import { BidPlacementForm } from "../../../../../components/ui/react/bid-placement-form";
-import {Headers} from "@/constants"
+import { Headers } from "@/constants";
 
 //@ts-ignore
-const {bid} = Astro.params;
+const { bid } = Astro.params;
 
 const params = new URLSearchParams();
 params.append("bidId", bid!);
-const res = await fetch(`${process.env.API_ENDPOINT}/v1/bids/manage-bid?${params.toString()}`, {headers: Headers});
+const res = await fetch(
+  `${process.env.API_ENDPOINT}/v1/bids/manage-bid?${params.toString()}`,
+  { headers: Headers }
+);
 const result = await res.json();
-
+const bidData = result?.bid;
+const placementStatus = bidData?.tender?.BidPlacement[0].status;
 ---
+
 <UserLayout title="Manage bid">
   <div
     class="flex flex-col bg-slate-100 dark:bg-natural gap-x-4 ml-24 w-[calc(100%-7rem)] p-8 mt-24 mb-8 h-full rounded-2xl"
   >
     <div class="flex justify-between">
       <Text type="p" content="Bid Placement" className="!font-bold text-xl" />
-      <Text type="p" content={`Not Placed`} className=`!font-bold text-lg !text-red-600` />
+      <Text
+        type="p"
+        content={placementStatus?.toUpperCase() ?? `NOT PLACED`}
+        className={placementStatus === "rejected"
+          ? "!text-red-600 !font-bold text-lg"
+          : (placementStatus === "placed" || placementStatus === 'accepted')
+            ? "!text-green-600 !font-bold text-lg"
+            : "" + ` !font-bold text-lg !text-gray-600`}
+      />
     </div>
     <div class="my-12">
-      <BidPlacementForm bidData={result?.bid} client:only />
+      <BidPlacementForm bidData={bidData} client:only />
     </div>
   </div>
 </UserLayout>

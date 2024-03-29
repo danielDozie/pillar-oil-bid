@@ -10,6 +10,21 @@ const userBids = result?.data;
 const activeBid = userBids?.filter((bid) => bid.status === "open")?.length;
 const totalBids = userBids?.length;
 
+//get total documents uploaded by user
+const documents = userBids?.reduce((accumulator, item) => {
+  if (item.tender) {
+    const filesCount =
+      item?.tender?.BidPlacement?.reduce(
+        (count, placement) => count + placement?.files?.length,
+        0
+      ) || 0;
+    accumulator.push(filesCount);
+  }
+  return accumulator;
+}, []);
+
+const totalDocuments = documents.reduce((total, count) => total + count, 0);
+
 const tenders = userBids?.map(({ tender }) => {
   return tender;
 });
@@ -54,7 +69,9 @@ const tenders = userBids?.map(({ tender }) => {
     >
       <h2 class="font-semibold text-lg mb-2">Documents submitted</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">0</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {totalDocuments}
+        </p>
         <Icon
           name="majesticons:analytics-plus-line"
           size={40}

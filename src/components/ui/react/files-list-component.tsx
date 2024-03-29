@@ -1,9 +1,8 @@
 import { Input } from './input'
 import { Button } from './button'
 
-export function FilesListComponenet({ data }: { data: any }) {
-    
-    console.log()
+export function FilesListComponent({ data }: { data: any }) {
+
   return (
       <>
           {
@@ -28,7 +27,7 @@ export function FilesListComponenet({ data }: { data: any }) {
                                       ? (item?.size / 1024 / 1024).toFixed(2) + " MB"
                                       : (item?.size / 1024).toFixed(2) + " KB"}
                               </p>
-                                  <a href={`/tender-documents/${item?.name}`} target="_blank">
+                                  <a href={`https://pub-89612445d44947dd8493fffbc7e59fdf.r2.dev/${item?.name}`} target="_blank">
                                       <Button variant="outline" size="sm" className='text-foreground'>
                                           View
                                       </Button>

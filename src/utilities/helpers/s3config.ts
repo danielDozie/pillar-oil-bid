@@ -1,7 +1,7 @@
 import {
     S3Client,
     ListBucketsCommand,
-    ListObjectsV2Command,
+    DeleteObjectCommand,
     GetObjectCommand,
     PutObjectCommand,
     CreateBucketCommand
@@ -34,16 +34,33 @@ const createBucket = async ({ name }: { name: string }) => {
 };
 
 const uploadItem = async ({ bucketName, itemName, itemBody }: { bucketName: string; itemName: string; itemBody?: string | Uint8Array | Buffer }) => {
-    //const preUrl = await getSignedUrl(CFR2, new PutObjectCommand({ Bucket: bucketName, Key: itemName }), { expiresIn: 3600 })
     const uploadUrl = await getSignedUrl(CFR2, new PutObjectCommand({ Bucket: bucketName, Key: itemName }), { expiresIn: 3600 });
-
     return {
         uploadUrl
     };
 };
 
+
+const removeItemByName = async ({ bucketName, itemName }: { bucketName: string; itemName: string }) => {
+    const deleteUrl = await getSignedUrl(CFR2, new DeleteObjectCommand({ Bucket: bucketName, Key: itemName }), { expiresIn: 3600 });
+    return {
+        deleteUrl
+    };
+};
+
+const getItemByName = async ({ bucketName, itemName }: { bucketName: string; itemName: string }) => {
+    const getObjectCommand = new GetObjectCommand({ Bucket: bucketName, Key: itemName });
+    const itemUrl = await getSignedUrl(CFR2, getObjectCommand, { expiresIn: 3600 });
+    return {
+        itemUrl
+    };
+};
+
+
 export {
     listBuckets,
     createBucket,
     uploadItem,
+    removeItemByName,
+    getItemByName
 }

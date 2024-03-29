@@ -38,31 +38,28 @@ import {
     TableRow,
 } from "@/components/ui/react/table"
 import { Badge } from "./badge"
+import { useState } from "react"
+import { toast } from "sonner"
+import { formatDate, formatTime } from "@/utilities/helpers/time-formatter"
 
-export type Bid = {
+
+export type BidPlacement = {
     id: number;
-    status: "pending" | "open" | "expired" | "sent";
+    contractor: {
+        companyName: string
+    }
     tender: {
-        title: string;
-        description: string;
-        location: string;
-        startDate: Date;
-        endDate: Date;
-        submissionDate: Date;
-        lastUpdatedDate: Date;
-        BidPlacement?: any[];
-    },
-    bid_order: "placed" | "Not placed"
+        title: string
+    }
+    status: "placed" | "accepted" | "rejected";
+    createdAt: Date;
 };
 
-export function BidsDataTable({ data }: { data: any }) {
+//export 
 
-    //sort data in descending order
-    const sortedData = React.useMemo(() => {
-        return [...data].sort((a, b) => new Date(b.tender.submissionDate).getTime() - new Date(a.tender.submissionDate).getTime());
-    }, [data]);
+export function BidPlacementDataTable({ data, role }: { data: any, role: string }) {
 
-    const columns: ColumnDef<Bid>[] = [
+    const columns: ColumnDef<BidPlacement>[] = [
         {
             id: "select",
             header: ({ table }) => (
@@ -89,35 +86,28 @@ export function BidsDataTable({ data }: { data: any }) {
             accessorKey: "id",
             header: "Id",
             cell: ({ row }) => (
-                <div className="capitalize">{`POL-RFX-B${row.getValue("id") }`}</div>
+                <div className="capitalize">{row.getValue("id")}</div>
+            ),
+        },
+        {
+            accessorKey: "vendor.contractor.businessName",
+            header: "Vendor",
+            cell: ({ row }) => (
+                <div className="capitalize text-clip">{row?.original?.contractor?.companyName}</div>
             ),
         },
         {
             accessorKey: "tender.title",
-            header: "Title",
+            header: "Tender",
             cell: ({ row }) => (
-                <div className="capitalize text-clip">{row.original.tender.title}</div>
+                <div className="capitalize">{row?.original?.tender?.title}</div>
             ),
         },
         {
-            accessorKey: "tender.location",
-            header: "Location",
+            accessorKey: "createdAt",
+            header: "Submission Date",
             cell: ({ row }) => (
-                <div className="capitalize">{row.original.tender.location}</div>
-            ),
-        },
-        {
-            accessorKey: "tender.startDate",
-            header: "Start date",
-            cell: ({ row }) => (
-                <div className="capitalize">{new Date(row.original.tender.startDate).toDateString()}</div>
-            ),
-        },
-        {
-            accessorKey: "tender.endDate",
-            header: "End date",
-            cell: ({ row }) => (
-                <div className="capitalize">{new Date(row.original.tender.endDate).toDateString()}</div>
+                <div className="capitalize">{formatTime(row.getValue("createdAt"))}</div>
             ),
         },
         {
@@ -134,14 +124,7 @@ export function BidsDataTable({ data }: { data: any }) {
                     </Button>
                 )
             },
-            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'expired' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
-        },
-        {
-            accessorKey: "tender.BidPlacement",
-            header: "Bid Order",
-            cell: ({ row }) => (
-                <div className="capitalize">{row?.original?.tender?.BidPlacement[0].status === 'rejected' ? <p className="text-red-600 dark:text-red-400 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0].status}</p> : (row?.original?.tender?.BidPlacement[0].status === 'accepted' || row?.original?.tender?.BidPlacement[0].status === 'placed') ? <p className="text-green-600 dark:text-green-400 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0]?.status}</p> : <p className="text-gray-500 dark:text-gray-500 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0]?.status}</p>}</div>
-            ),
+            cell: ({ getValue }) => (String(getValue()) === 'placed' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : String(getValue()) === 'rejected' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : String(getValue()) === 'accepted' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200 uppercase">{`Error`}</Badge>)
         },
         {
             id: "actions",
@@ -161,7 +144,7 @@ export function BidsDataTable({ data }: { data: any }) {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <a href={`/u/user/bids/manage/${Number(row.original.id)}`}>Manage Bid</a>
+                                <a href={`/u/${role}/bids/manage/${Number(row.original.id)}`}>Manage Bid</a>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -178,9 +161,10 @@ export function BidsDataTable({ data }: { data: any }) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
-    
+
+
     const table = useReactTable({
-        data: sortedData,
+        data,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -202,42 +186,13 @@ export function BidsDataTable({ data }: { data: any }) {
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter title..."
-                    value={table.getColumn("id")?.getFilterValue() as string ?? ''}
-                    onChange={(event) => {
-                        const column = table.getColumn("id");
-                        if (column) {
-                            column.setFilterValue(event.target.value);
-                        }
-                    }}
+                    placeholder="Filter vendor..."
+                    value={(table.getColumn("contractor.companyName")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn("contractor.companyName")?.setFilterValue(event.target.value)
+                    }
                     className="max-w-sm bg-white dark:bg-background-color"
                 />
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto bg-white dark:bg-background-color text-foreground border-0">
-                            View <ChevronDownIcon className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize dark:bg-unset"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
             </div>
             <div className="rounded-md border dark:border-gray-700">
                 <Table>

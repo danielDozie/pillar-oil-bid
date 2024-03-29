@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
+  binaryTargets   = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
   previewFeatures = ["relationJoins"]
 }
 
@@ -24,7 +24,7 @@ model Bid {
 }
 
 model Tender {
-  id              Int          @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
   title           String
   description     String
   location        String
@@ -35,8 +35,9 @@ model Tender {
   recipients      Recipients[]
   bids            Bid[]
   status          String
-  submissionDate  DateTime     @map("submission_date")
-  lastUpdatedDate DateTime     @updatedAt @map("last_updated")
+  submissionDate  DateTime       @map("submission_date")
+  lastUpdatedDate DateTime       @updatedAt @map("last_updated")
+  BidPlacement    BidPlacement[]
 
   @@map("tender")
 }
@@ -54,27 +55,31 @@ model Item {
 }
 
 model File {
-  id       Int     @id @default(autoincrement())
-  name     String
-  size     Int
-  path     String
-  tenderId Int?    @map("tender_id")
-  tender   Tender? @relation(fields: [tenderId], references: [id])
+  id             Int           @id @default(autoincrement())
+  name           String
+  size           Int
+  path           String
+  tenderId       Int?          @map("tender_id")
+  tender         Tender?       @relation(fields: [tenderId], references: [id])
+  // Relation back to BidPlacement
+  bidPlacementId Int?     @map("bid_placement_id")
+  bidPlacement   BidPlacement? @relation(fields: [bidPlacementId], references: [id], name: "BidPlacementFiles")
 
   @@map("file")
 }
 
 model Contractor {
-  id            Int          @id @default(autoincrement())
-  companyName   String?      @map("company_name")
-  email         String?      @unique
-  homePhone     String?      @map("home_phone")
-  businessPhone String?      @map("business_phone")
-  falconRegistration    Boolean   @default(false)  @map("falcon_registration")
-  userId        Int?
-  user          User?        @relation(fields: [userId], references: [id])
-  Bid           Bid[]
-  recipient     Recipients[]
+  id                 Int            @id @default(autoincrement())
+  companyName        String?        @map("company_name")
+  email              String?        @unique
+  homePhone          String?        @map("home_phone")
+  businessPhone      String?        @map("business_phone")
+  falconRegistration Boolean        @default(false) @map("falcon_registration")
+  userId             Int?
+  user               User?          @relation(fields: [userId], references: [id])
+  Bid                Bid[]
+  recipient          Recipients[]
+  BidPlacement       BidPlacement[]
 
   @@unique([userId], name: "user_id")
   @@map("contractor")
@@ -119,7 +124,7 @@ model Fxbidder {
   businessPhone String? @map("business_phone")
 
   userId       Int?
-  user         User?         @relation(fields: [userId], references: [id])
+  user         User?          @relation(fields: [userId], references: [id])
   FxRecipients FxRecipients[]
 
   @@unique([userId], name: "user_id")
@@ -127,27 +132,46 @@ model Fxbidder {
 }
 
 model Fx {
-  id              Int            @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   title           String
   currency        String
   amount          String
-  startTime       DateTime       @map("start_time")
-  endTime         DateTime       @map("end_time")
+  startTime       DateTime @map("start_time")
+  endTime         DateTime @map("end_time")
   note            String
   status          String
-  submissionDate  DateTime       @map("submission_date")
-  lastUpdatedDate DateTime       @updatedAt @map("last_updated")
+  submissionDate  DateTime @map("submission_date")
+  lastUpdatedDate DateTime @updatedAt @map("last_updated")
 
-  FxRecipients    FxRecipients[]
+  FxRecipients FxRecipients[]
+
   @@map("fx")
 }
 
 model FxRecipients {
   id         Int       @id @default(autoincrement())
-  fxBidderId Int?       @map("fx_bidder_id")
-  fxBidder   Fxbidder?  @relation(fields: [fxBidderId], references: [id])
-  fxId       Int?       @map("fx_id")
+  fxBidderId Int?      @map("fx_bidder_id")
+  fxBidder   Fxbidder? @relation(fields: [fxBidderId], references: [id])
+  fxId       Int?      @map("fx_id")
   fx         Fx?       @relation(fields: [fxId], references: [id])
 
   @@map("fx-recipients")
 }
+
+model BidPlacement {
+  id               Int      @id @default(autoincrement())
+  documentPassword String   @map("document_password")
+  status           String   @default("placed")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relationships
+  contractorId Int    @map("contractor_id")
+  contractor   Contractor @relation(fields: [contractorId], references: [id])
+  tenderId     Int    @map("tender_id")
+  tender       Tender     @relation(fields: [tenderId], references: [id])
+  files        File[]     @relation("BidPlacementFiles")
+
+  @@map("bid_placements")
+}
+

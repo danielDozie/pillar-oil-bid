@@ -6,8 +6,8 @@ const getStatsData = async () => {
     const resTender = await fetch(`${process.env.API_ENDPOINT}/v1/tenders`, { headers: Headers });
     const resVendor = await fetch(`${process.env.API_ENDPOINT}/v1/vendors`, { headers: Headers });
     const fxBids = await fetch(`${process.env.API_ENDPOINT}/v1/fx`, { headers: Headers });
-    const fxbids = await fxBids.json();
 
+    const fxbids = await fxBids.json();
     const tenders = await resTender.json();
     const vendors = await resVendor.json();
 
@@ -27,7 +27,7 @@ const getStatsData = async () => {
 
     return {
         data,
-        fxData,
+        fxData
     }
 }
 

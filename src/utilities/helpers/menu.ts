@@ -4,7 +4,7 @@ export const menu = {
       { id: 1, name: "Dashboard", icon: "majesticons:home", link: "/u/admin" },
       { id: 2, name: "Vendors", icon: "majesticons:user", link: "/u/admin/vendors" },
       { id: 3, name: "Tenders", icon: "majesticons:analytics", link: "/u/admin/tenders" },
-      // { id: 4, name: "FX", icon: "majesticons:dollar-circle", link: "/dashboard/fx" },
+      { id: 4, name: "Bids", icon: "majesticons:article", link: "/u/admin/bids" },
       { id: 5, name: "Report", icon: "majesticons:noteblock-text", link: "/u/admin/report" },
     ],
     lower: [
@@ -17,7 +17,7 @@ export const menu = {
       { id: 1, name: "Dashboard", icon: "majesticons:home", link: "/u/operator" },
       { id: 2, name: "Vendors", icon: "majesticons:user", link: "/u/operator/vendors" },
       { id: 3, name: "Tenders", icon: "majesticons:analytics", link: "/u/operator/tenders" },
-      // { id: 4, name: "FX", icon: "majesticons:dollar-circle", link: "/dashboard/fx" },
+      { id: 4, name: "Bids", icon: "majesticons:article", link: "/u/operator/bids" },
       { id: 5, name: "Report", icon: "majesticons:noteblock-text", link: "/u/operator/report" },
     ],
     lower: [
