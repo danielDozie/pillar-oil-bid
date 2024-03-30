@@ -16,7 +16,7 @@ const PROTECTED_ROUTE = [
     "/api/v1/fx",
     "/api/v1/fx/add-new-fx",
     "/api/v1/fx/fx-bidders",
-    "/api/v1/fx/manage",
+    "/api/v1/fx/manage-fx",
     "/api/v1/tenders",
     "/api/v1/tenders/add-tender",
     "/api/v1/tenders/send-tender",
@@ -24,7 +24,7 @@ const PROTECTED_ROUTE = [
     "/api/v1/vendors",
     "/api/v1/vendors/add-vendor",
     "/api/v1/vendors/manage-vendor",
-    "/api/uploads/tender-files",
+    "/api/uploads/tender-files"
 ];
 
 const Headers = {
@@ -32,8 +32,11 @@ const Headers = {
     "Content-Type": "application/json",
 };
 
+const DOCUMENTS_URL = `https://pub-89612445d44947dd8493fffbc7e59fdf.r2.dev`;
+
 export {
     PROTECTED_ROUTE,
     PUBLIC_ROUTE,
-    Headers
+    Headers,
+    DOCUMENTS_URL
 }

@@ -5,7 +5,7 @@ import {ManageVendorComponent} from "@/components/ui/react/manage-vendor-compone
 
 const {vendor} = Astro.params;
 //@ts-ignore
-const vendorData = await fetch(`${process.env.API_ENDPOINT}/v1/vendors/manage-vendor/?${new URLSearchParams({ vendor }).toString()}`, {heaaders: Headers});
+const vendorData = await fetch(`${process.env.API_ENDPOINT}/v1/vendors/manage-vendor/?${new URLSearchParams({ vendor }).toString()}`, {headers: Headers});
 const {vendor: result} = await vendorData.json();
 
 ---

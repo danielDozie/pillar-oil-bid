@@ -1,5 +1,12 @@
 ---
 import { Icon } from "astro-icon/components";
+import { Badge } from "./ui/react/badge";
+import { getStatsData } from "@/utilities/helpers/getStatsData";
+import { formatTime } from "@/utilities/helpers/time-formatter";
+
+const { fxData } = await getStatsData();
+//sort by amount in desc order
+const sortedFxData = fxData.sort((a, b) => b.amount - a.amount);
 ---
 
 <div class="flex flex-col gap-x-4 ml-20 w-[calc(100%-5rem)] px-4 mt-24 mb-8">
@@ -9,7 +16,7 @@ import { Icon } from "astro-icon/components";
 
   <div class="flex gap-x-6">
     <div class="w-1/4 bg-slate-100 dark:bg-natural rounded-lg p-4 shadow-md">
-      <h2 class="font-semibold text-foreground text-lg mb-2">Active</h2>
+      <h2 class="font-semibold text-foreground text-lg mb-2">Active Fx</h2>
       <span class="flex justify-between">
         <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">0</p>
         <Icon
@@ -22,7 +29,7 @@ import { Icon } from "astro-icon/components";
     <div
       class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
-      <h2 class="font-semibold text-lg mb-2">Fx requests</h2>
+      <h2 class="font-semibold text-lg mb-2">Fx Bids</h2>
       <span class="flex justify-between">
         <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">0</p>
         <Icon
@@ -68,48 +75,49 @@ import { Icon } from "astro-icon/components";
       <thead>
         <tr class="bg-slate-100 dark:bg-primary text-foreground text-left">
           <th class="py-4 px-4 font-semibold">Title</th>
-          <th class="py-4 px-4 font-semibold">Start date</th>
-          <th class="py-4 px-4 font-semibold">End date</th>
-          <th class="py-4 px-4 font-semibold">Intent to bid</th>
+          <th class="py-4 px-4 font-semibold">Amount</th>
+          <th class="py-4 px-4 font-semibold">Start Time</th>
+          <th class="py-4 px-4 font-semibold">End Time</th>
           <th class="py-4 px-4 font-semibold">Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="border-t border-gray-200 dark:border-gray-700">
-          <td class="py-4 px-4">Supply Chain Management</td>
-          <td class="py-4 px-4">2021-12-31 14:00</td>
-          <td class="py-4 px-4">2022-12-31 14:00</td>
-          <td class="py-4 px-4">23</td>
-          <td class="py-4 px-4">20 (83%)</td>
-        </tr>
-        <tr class="border-t border-gray-200 dark:border-gray-700">
-          <td class="py-4 px-4">Marketing Campaign</td>
-          <td class="py-4 px-4">Advertising</td>
-          <td class="py-4 px-4">2022-11-15 10:30</td>
-          <td class="py-4 px-4">14</td>
-          <td class="py-4 px-4">4 (14%)</td>
-        </tr>
-        <tr class="border-t border-gray-200 dark:border-gray-700">
-          <td class="py-4 px-4">Software Development</td>
-          <td class="py-4 px-4">Technology</td>
-          <td class="py-4 px-4">2023-01-20 09:00</td>
-          <td class="py-4 px-4">11</td>
-          <td class="py-4 px-4">2 (2%)</td>
-        </tr>
-        <tr class="border-t border-gray-200 dark:border-gray-700">
-          <td class="py-4 px-4">Supply Chain Management</td>
-          <td class="py-4 px-4">Logistics</td>
-          <td class="py-4 px-4">2022-12-31 14:00</td>
-          <td class="py-4 px-4">23</td>
-          <td class="py-4 px-4">20 (83%)</td>
-        </tr>
-        <tr class="border-t border-gray-200 dark:border-gray-700">
-          <td class="py-4 px-4">Marketing Campaign</td>
-          <td class="py-4 px-4">Advertising</td>
-          <td class="py-4 px-4">2022-11-15 10:30</td>
-          <td class="py-4 px-4">14</td>
-          <td class="py-4 px-4">4 (14%)</td>
-        </tr>
+        {
+          sortedFxData.map((item) => (
+            <tr class="border-t border-gray-200 dark:border-gray-700">
+              <td class="py-4 px-4">{item?.title}</td>
+              <td class="py-4 px-4">
+                {item?.currency.toUpperCase()}
+                {item?.amount}
+              </td>
+              <td class="py-4 px-4">{formatTime(item?.startTime)}</td>
+              <td class="py-4 px-4">{formatTime(item?.endTime)}</td>
+              <td class="py-4 px-4">
+                {item?.status === "pending" ? (
+                  <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">
+                    {item?.status}
+                  </Badge>
+                ) : item?.status === "sent" ? (
+                  <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">
+                    {item?.status}
+                  </Badge>
+                ) : item?.status === "expired" ? (
+                  <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">
+                    {item?.status}
+                  </Badge>
+                ) : item?.status === "open" ? (
+                  <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">
+                    {item?.status}
+                  </Badge>
+                ) : (
+                  <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">
+                    {item?.status}
+                  </Badge>
+                )}
+              </td>
+            </tr>
+          ))
+        }
       </tbody>
     </table>
   </div>

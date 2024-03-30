@@ -6,7 +6,16 @@ export const GET: APIRoute = async ({request }) => {
 
     const data = await prisma.bid.findMany({
         where: { contractorId: id },
-        include: {tender: true,}
+        include: {
+            tender: {
+                include: {
+                    BidPlacement: {
+                        include: {
+                            files: true
+                        }
+                    }
+            }
+        },}
     })
 
     if (data) {

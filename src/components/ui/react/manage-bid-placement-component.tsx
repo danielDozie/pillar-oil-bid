@@ -2,51 +2,58 @@ import { Button } from './button'
 import { Input } from './input'
 import { Textarea } from './text-area'
 import { Badge } from './badge'
-import { ItemListComponent } from './item-list-component'
 import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
 import { FilesListComponent } from './files-list-component';
 
-export function ManageTenderComponent({ result, token }: {result: any, token: string}) {
-    const [loading, setLoading] = useState(false);
+export function ManageBidPlacementComponent({ result, documentPassword, token }: { result: any, documentPassword: string, token: string }) {
+    const [loading1, setLoading1] = useState(false);
+    const [loading2, setLoading2] = useState(false);
 
-    const sendTenderHandler = async () => {
-        setLoading(true)
-        try {
-            const res = await fetch('/api/v1/tenders/send-tender', {
-                method: "POST",
-                body: JSON.stringify(result),
-                headers: {
-                    "x-pol-rfx-secret": token,
-                    "Content-Type": "application/json"
-                }
-            });
-            const response = await res.json();
-            if (res.status === 200) {
-                setLoading(false);
-                toast.success(response.message)
-                window.location.reload();
-            } else {
-                setLoading(false);
-                toast.error(response.message)
-            }
-        } catch (error) {
-            console.log(error)
+
+    const handleBidPlacement = async (e: { preventDefault: () => void }) => {
+        e.preventDefault();
+        const payload = {
+            id: result?.id,
+            //@ts-ignore
+            action: e?.target?.textContent.toLowerCase(),
         }
-        
-    };
+        if (payload?.action === 'accept') {
+            setLoading1(true)
+        } else if (payload?.action === 'reject') {
+            setLoading2(true)
+        };
 
-    const editTenderHandler = () => {
-        alert("Edit handler")
-    };
+
+        const res = await fetch(`/api/v1/bids/manage-bid-placement`, {
+            method: "POST",
+            headers: {
+                "x-pol-rfx-secret": token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        const responseMessage = await res.json()
+
+        if (res.status === 200) {
+            toast.success(responseMessage?.message);
+            setLoading1(false)
+            setLoading2(false)
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000)
+        }
+
+    }
 
     return (
         <div
             className="flex flex-col bg-slate-100 dark:bg-natural gap-x-4 ml-24 w-[calc(100%-7rem)] p-8 mt-24 mb-8 h-full rounded-2xl">
             <div className="flex flex-row gap-8 text-foreground">
                 <div className="w-full">
-                    <h1 className="text-xl font-bold mb-4">Manage tender</h1>
+                    <h1 className="text-xl font-bold mb-4">Manage Bid</h1>
                     <div className="flex flex-row space-x-4 w-full">
                         <div className="w-3/5">
                             <h2 className="font-semibold">General information</h2>
@@ -170,46 +177,43 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
                                 </div>
                             </div>
 
-                            <h2 className="font-semibold">Items</h2>
-                            <ItemListComponent data={result?.tender?.items} />
-                            
-                            <h2 className="font-semibold">Files</h2>
-                            <FilesListComponent data={result?.tender?.files} />
+                            <h2 className="font-semibold">Bid Document(s)</h2>
+                            <FilesListComponent data={result?.files} />
+                            <label className="font-semibold">Encryption Password</label>
+                            <Input className="font-semibold" type='text' placeholder='Documents password' value={documentPassword} readOnly/>
                         </div>
                         <div
                             className="flex flex-col justify-between w-2/5 bg-white dark:bg-background-color rounded-xl p-6"
                         >
-                            <div className="w-full h-[85]">
-                                <h2 className="font-bold pb-4">Bidding recepients</h2>
-                                <div className="w-full relative overflow-y-auto h-[95%]">
-                                    {
-                                        result?.recipientsWithDetails.map((item, idx) => (
-                                            <div className="flex flex-col" key={idx}>
-                                                <p className="text-sm font-medium py-1">
-                                                    {item?.companyName}
-                                                </p>
-                                            </div>
-                                        ))
-                                    }
+                            <div className="w-full">
+                                <h2 className="font-bold pb-4">Bid Action</h2>
+                                <p className='text-sm'>Ensure to analyse and carefully scrutinize the bid documents before approval or rejection.</p>
+                                <div className="w-full flex justify-center space-x-4 my-4">
+                                    <Button
+                                        size="sm"
+                                        id="accept"
+                                        className="lex px-12 bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
+                                        disabled={(result?.status !== "placed" && true) || loading1}
+                                        onClick={handleBidPlacement}>
+                                        {loading1 && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+                                        Accept
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        id='reject'
+                                        className="flex px-12 bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:text-white dark:hover:bg-red-700"
+                                        disabled={(result?.status !== "placed" && true) || loading2}
+                                        onClick={handleBidPlacement}>
+                                        {loading2 && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+                                        Reject
+                                    </Button>
+                                </div>
+
+                                <div className='flex justify-center mt-8'>
+                                    {result?.status !== 'placed' ? <h3 className={`font-semibold text-xl border-2 p-4 rounded-lg ${result?.status === 'accepted' ? 'text-green-600 border-green-600 bg-green-50' : 'text-red-600 border-red-600 bg-red-50'} `}>{result?.status.toUpperCase()}</h3> : ''}
                                 </div>
                             </div>
-                            <div className="w-full flex max-h-[15] justify-end space-x-4">
-                                <Button
-                                    size="sm"
-                                    className="flex px-12 flex-end"
-                                    onClick={editTenderHandler}
-                                    disabled={(result?.tender?.status !== "pending" && true) || loading}>
-                                    Edit
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    className="flex px-12 bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:text-white dark:hover:bg-green-700 flex-end"
-                                    onClick={sendTenderHandler}
-                                    disabled={(result?.tender?.status !== "pending" && true) || loading}>
-                                    {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-                                    Send
-                                </Button>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>

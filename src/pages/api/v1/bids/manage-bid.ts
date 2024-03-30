@@ -15,7 +15,12 @@ export const GET: APIRoute = async ({ request }) => {
                 tender: {
                     include: {
                         files: true,
-                        items: true
+                        items: true,
+                        BidPlacement: {
+                            include: {
+                                files: true
+                            }
+                        }
                     }
                 },
                 contractor: true

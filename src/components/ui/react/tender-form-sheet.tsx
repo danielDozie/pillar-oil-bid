@@ -161,8 +161,11 @@ export function TenderFormSheet({token}: {token: string}) {
                             + Add more
                         </Button>
                     </div>
-                    <div className="w-full space-y-2">
-                        <label className="text-xs text-muted-foreground font-semibold" htmlFor="items">Supporting documents</label>
+                    <div className="w-full flex flex-col space-y-2">
+
+                        <div className='flex justify-between my-2'>
+                            <label className="text-xs text-muted-foreground font-semibold" htmlFor="items">Supporting documents</label>
+                        </div>
                         <FileUploader />
                     </div>
 

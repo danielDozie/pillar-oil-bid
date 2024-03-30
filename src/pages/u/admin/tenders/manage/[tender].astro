@@ -26,6 +26,7 @@ const listRecipients = async () => {
 
 const receivers = await listRecipients();
 const result = Object.assign({ ...data, recipientsWithDetails: receivers });
+
 ---
 
 <AdminLayout title={`Tender | ${result?.tender?.title}`}>

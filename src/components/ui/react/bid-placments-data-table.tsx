@@ -38,26 +38,28 @@ import {
     TableRow,
 } from "@/components/ui/react/table"
 import { Badge } from "./badge"
-import { formatDate, formatTime } from "@/utilities/helpers/time-formatter";
-import { formatCurrency } from "@/utilities/helpers/formatCurrency";
+import { useState } from "react"
+import { toast } from "sonner"
+import { formatDate, formatTime } from "@/utilities/helpers/time-formatter"
 
-export type FX = {
+
+export type BidPlacement = {
     id: number;
-    title: string;
-    currency: string;
-    amount: string;
-    startTime: Date;
-    endTime: Date;
-    status: "pending" | "open" | "expired" | "sent";
-    note: string;
-    submissionDate: Date;
-    lastUpdatedDate: Date;
+    contractor: {
+        companyName: string
+    }
+    tender: {
+        title: string
+    }
+    status: "placed" | "accepted" | "rejected";
+    createdAt: Date;
 };
 
-export function FXDataTable({ data }: { data: any }) {
+//export 
 
+export function BidPlacementDataTable({ data, role }: { data: any, role: string }) {
 
-    const columns: ColumnDef<FX>[] = [
+    const columns: ColumnDef<BidPlacement>[] = [
         {
             id: "select",
             header: ({ table }) => (
@@ -88,31 +90,24 @@ export function FXDataTable({ data }: { data: any }) {
             ),
         },
         {
-            accessorKey: "title",
-            header: "Title",
+            accessorKey: "vendor.contractor.businessName",
+            header: "Vendor",
             cell: ({ row }) => (
-                <div className="capitalize text-clip">{row.original.title}</div>
+                <div className="capitalize text-clip">{row?.original?.contractor?.companyName}</div>
             ),
         },
         {
-            accessorKey: "amount",
-            header: "Amount",
+            accessorKey: "tender.title",
+            header: "Tender",
             cell: ({ row }) => (
-                <div className="uppercase">{row.original.currency + " " + formatCurrency(Number(row.original.amount))}</div>
+                <div className="capitalize">{row?.original?.tender?.title}</div>
             ),
         },
         {
-            accessorKey: "startTime",
-            header: "Start Time",
+            accessorKey: "createdAt",
+            header: "Submission Date",
             cell: ({ row }) => (
-                <div className="capitalize">{formatTime(row.original.startTime)}</div>
-            ),
-        },
-        {
-            accessorKey: "endTime",
-            header: "End Time",
-            cell: ({ row }) => (
-                <div className="capitalize">{formatTime(row.original.endTime)}</div>
+                <div className="capitalize">{formatTime(row.getValue("createdAt"))}</div>
             ),
         },
         {
@@ -129,7 +124,7 @@ export function FXDataTable({ data }: { data: any }) {
                     </Button>
                 )
             },
-            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'expired' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
+            cell: ({ getValue }) => (String(getValue()) === 'placed' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : String(getValue()) === 'rejected' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : String(getValue()) === 'accepted' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200 uppercase">{`Error`}</Badge>)
         },
         {
             id: "actions",
@@ -149,7 +144,7 @@ export function FXDataTable({ data }: { data: any }) {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <a href={`/u/fx/bids/manage/${Number(row.original.id)}`}>Manage Fx</a>
+                                <a href={`/u/${role}/bids/manage/${Number(row.original.id)}`}>Manage Bid</a>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -191,39 +186,13 @@ export function FXDataTable({ data }: { data: any }) {
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter title..."
-                    value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+                    placeholder="Filter vendor..."
+                    value={(table.getColumn("contractor.companyName")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("title")?.setFilterValue(event.target.value)
+                        table.getColumn("contractor.companyName")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm bg-white dark:bg-background-color"
                 />
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto bg-white dark:bg-background-color text-foreground border-0">
-                            Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize dark:bg-unset"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
             </div>
             <div className="rounded-md border dark:border-gray-700">
                 <Table>
