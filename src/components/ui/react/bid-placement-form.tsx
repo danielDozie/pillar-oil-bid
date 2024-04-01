@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import { formatDate } from "@/utilities/helpers/time-formatter";
+import { ReloadAfter } from "@/utilities/helpers/reload";
 
 interface BidPlacementPageProps {
     bidData: Bid;
@@ -44,9 +45,7 @@ export function BidPlacementForm({ bidData }: BidPlacementPageProps) {
         if (res.status === 200) {
             setLoading(false)
             toast.success(responseMessage.message)
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
+            ReloadAfter(1500)
         } else {
             setLoading(false)
             toast.error(responseMessage.message)

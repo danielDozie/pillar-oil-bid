@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import type { APIRoute } from "astro";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer"
-import { toast } from "sonner";
 
 const prisma = new PrismaClient()
 
@@ -50,11 +49,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                 let info = await transporter.sendMail({
                     from: `"POL RFX" <no-reply@pillarbid.com>`, // Sender address
                     to: email, // List of receivers
-                    subject: "Welcome to Pillar Bids", // Subject line
-                    text: `Welcome to Pillar Bids`, // Plain text body
+                    subject: "Welcome to POL RFX", // Subject line
+                    text: `Welcome to POL RFX`, // Plain text body
                     html: `
             <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Welcome to Pillar Bids</h1>
+                <h1 style="color: #333; font-size: 24px;">Welcome to POL RFX</h1>
                 <p style="color: #555; font-size: 16px; margin: 20px 0;">Welcome ${payload.companyName}, your account registration is complete</p>
                 <div style="background-color: #f8f8f8; padding: 10px; border-radius: 5px; margin: 20px 0;">
                     <p style="font-size: 16px; color: gray;">You have successfully regstered on pillar bids platform. ,<br/>Ensure you follow all our guidlines to avoid desciplinary actions against you.<br/><br/>Feel free to reach out to us for any inquiry.</p>
@@ -95,7 +94,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                         email: email,
                     },
                     data: {
-                        role: 'fx',
+                        role: 'fx-user',
                     },
                 });
                 if (updateUserRole.id) {
@@ -114,11 +113,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                     let info = await transporter.sendMail({
                         from: `"POL RFX" <no-reply@pillarbid.com>`, // Sender address
                         to: email, // List of receivers
-                        subject: "Welcome to Pillar Fx", // Subject line
-                        text: `Welcome to Pillar Fx`, // Plain text body
+                        subject: "Welcome to POL RFX", // Subject line
+                        text: `Welcome to POL RFX`, // Plain text body
                         html: `
             <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Welcome to Pillar Fx</h1>
+                <h1 style="color: #333; font-size: 24px;">Welcome to POL RFX</h1>
                 <p style="color: #555; font-size: 16px; margin: 20px 0;">Welcome ${payload.firstName}, your account registration is complete</p>
                 <div style="background-color: #f8f8f8; padding: 10px; border-radius: 5px; margin: 20px 0;">
                     <p style="font-size: 16px; color: gray;">You have successfully regstered on pillar fx platform. ,<br/>Ensure you follow all our guidlines to avoid desciplinary actions against you.<br/><br/>Feel free to reach out to us for any inquiry.</p>

@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
 import { FilesListComponent } from './files-list-component';
+import { ReloadAfter } from '@/utilities/helpers/reload'
 
 export function ManageTenderComponent({ result, token }: {result: any, token: string}) {
     const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
             if (res.status === 200) {
                 setLoading(false);
                 toast.success(response.message)
-                window.location.reload();
+                ReloadAfter(1500)
             } else {
                 setLoading(false);
                 toast.error(response.message)

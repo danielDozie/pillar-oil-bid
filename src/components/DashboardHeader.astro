@@ -7,7 +7,10 @@ import { AvatarComponent } from "@/components/ui/react/avatar-component";
 
 const { role } = Astro.props;
 //@ts-ignore
-const companyName = Astro.locals?.user?.companyName;
+const name = Astro.locals?.user?.companyName || Astro.locals?.user?.firstName;
+//@ts-ignore
+const userRole = Astro.locals?.user?.user?.role;
+
 ---
 
 <div
@@ -47,7 +50,12 @@ const companyName = Astro.locals?.user?.companyName;
         <AvatarComponent
           alt={`name`}
           src={``}
-          fallbackText={companyName}
+          fallbackText={userRole === 
+            "fx" ?
+            "Fx Admin" : userRole === "operator" ?
+            "Operator" : userRole === 'admin' ? 
+            "Admin" : name
+            }
           client:load
         />
       </div>

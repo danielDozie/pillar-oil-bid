@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
 import { FilesListComponent } from './files-list-component';
+import { ReloadAfter } from '@/utilities/helpers/reload'
 
 export function ManageBidPlacementComponent({ result, documentPassword, token }: { result: any, documentPassword: string, token: string }) {
     const [loading1, setLoading1] = useState(false);
@@ -41,9 +42,7 @@ export function ManageBidPlacementComponent({ result, documentPassword, token }:
             toast.success(responseMessage?.message);
             setLoading1(false)
             setLoading2(false)
-            setTimeout(() => {
-                window.location.reload()
-            }, 2000)
+            ReloadAfter(2000)
         }
 
     }
@@ -189,28 +188,30 @@ export function ManageBidPlacementComponent({ result, documentPassword, token }:
                                 <h2 className="font-bold pb-4">Bid Action</h2>
                                 <p className='text-sm'>Ensure to analyse and carefully scrutinize the bid documents before approval or rejection.</p>
                                 <div className="w-full flex justify-center space-x-4 my-4">
-                                    <Button
-                                        size="sm"
-                                        id="accept"
-                                        className="lex px-12 bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
-                                        disabled={(result?.status !== "placed" && true) || loading1}
-                                        onClick={handleBidPlacement}>
-                                        {loading1 && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-                                        Accept
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        id='reject'
-                                        className="flex px-12 bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:text-white dark:hover:bg-red-700"
-                                        disabled={(result?.status !== "placed" && true) || loading2}
-                                        onClick={handleBidPlacement}>
-                                        {loading2 && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-                                        Reject
-                                    </Button>
+                                    {(!result?.status || result?.status !== 'placed') ? "" : <>
+                                        <Button
+                                            size="sm"
+                                            id="accept"
+                                            className="lex px-12 bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
+                                            disabled={(result?.status !== "placed" && true) || loading1}
+                                            onClick={handleBidPlacement}>
+                                            {loading1 && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+                                            Accept
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            id='reject'
+                                            className="flex px-12 bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:text-white dark:hover:bg-red-700"
+                                            disabled={(result?.status !== "placed" && true) || loading2}
+                                            onClick={handleBidPlacement}>
+                                            {loading2 && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+                                            Reject
+                                        </Button>
+                                    </>}
                                 </div>
 
                                 <div className='flex justify-center mt-8'>
-                                    {result?.status !== 'placed' ? <h3 className={`font-semibold text-xl border-2 p-4 rounded-lg ${result?.status === 'accepted' ? 'text-green-600 border-green-600 bg-green-50' : 'text-red-600 border-red-600 bg-red-50'} `}>{result?.status.toUpperCase()}</h3> : ''}
+                                    {(!result?.status || result?.status !== 'placed') ? <h3 className={`font-semibold text-xl border-2 p-4 rounded-lg ${result?.status === 'accepted' ? 'text-green-600 border-green-600 bg-green-50' : result?.status === 'rejected' ? 'text-red-600 border-red-600 bg-red-50' :  'hidden'} `}>{result?.status.toUpperCase()}</h3> : ''}
                                 </div>
                             </div>
                             

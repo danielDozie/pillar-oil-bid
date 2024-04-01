@@ -39,8 +39,9 @@ export const menu = {
   fx: {
     upper: [
       { id: 1, name: "Dashboard", icon: "majesticons:home", link: "/u/fx" },
-      { id: 2, name: "Bids", icon: "majesticons:analytics", link: "/u/fx/bids" },
-      { id: 3, name: "Report", icon: "majesticons:noteblock-text", link: "/u/fx/report" },
+      { id: 2, name: "Fx", icon: "majesticons:analytics", link: "/u/fx/fx" },
+      { id: 3, name: "Bids", icon: "majesticons:article", link: "/u/fx/bids" },
+      { id: 4, name: "Report", icon: "majesticons:noteblock-text", link: "/u/fx/report" },
     ],
     lower: [
       { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/fx/settings" },

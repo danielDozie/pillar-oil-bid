@@ -1,7 +1,20 @@
 ---
 import FxUserLayout from "../../../layouts/FxUserLayout.astro";
+import {Headers} from "@/constants"
+import FxUserComponent from "@/components/ui/react/fx-user-component";
+
+
+const res = await fetch(`${import.meta.env.API_ENDPOINT}/v1/fx/fetch-fx`, {
+    headers: {
+      "content-type": "application/json",
+      "x-pol-rfx-secret": Headers['x-pol-rfx-secret']
+    },
+});
+
+const data = await res.json();
+
 ---
 
-<FxUserLayout title="Dashboard | Fx User">
-
+<FxUserLayout title="Dashboard | User">
+  <FxUserComponent client:load data={data} />
 </FxUserLayout>

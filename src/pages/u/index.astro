@@ -7,7 +7,6 @@ const isLoggedIn = Astro.locals?.isLoggedIn;
 
 const otpVerified = Boolean(Astro.cookies.get("otp-verified")?.value);
 
-console.log(role)
 if (role) {
   //add a flag to detect otp confirmation
   if (!otpVerified) {

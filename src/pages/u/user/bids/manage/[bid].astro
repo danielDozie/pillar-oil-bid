@@ -28,9 +28,9 @@ const placementStatus = bidData?.tender?.BidPlacement[0].status;
         type="p"
         content={placementStatus?.toUpperCase() ?? `NOT PLACED`}
         className={placementStatus === "rejected"
-          ? "!text-red-600 !font-bold text-lg"
+          ? "!text-red-600 !bg-red-50 !font-bold text-lg p-4 border-2 border-red-600 rounded-lg"
           : (placementStatus === "placed" || placementStatus === 'accepted')
-            ? "!text-green-600 !font-bold text-lg"
+            ? "!text-green-600 !bg-green-50 !font-bold text-lg p-4 border-2 border-green-600 rounded-lg"
             : "" + ` !font-bold text-lg !text-gray-600`}
       />
     </div>

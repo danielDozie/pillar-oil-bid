@@ -6,6 +6,7 @@ import { Textarea } from './text-area';
 import { toast } from 'sonner';
 import { FXRecepientFormSheet } from './fx-recipient-form-sheet';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { ReloadAfter } from '@/utilities/helpers/reload';
 
 
 export function FxFormSheet({token}:{token: string}) {
@@ -67,9 +68,7 @@ export function FxFormSheet({token}:{token: string}) {
             window.localStorage.removeItem('@fx-recipients')
             toast.success(responseMessage.message);
             setOpen(false)
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            ReloadAfter(1500)
         } else {
             setLoading(false);
             toast.error(responseMessage.message);
@@ -79,7 +78,7 @@ export function FxFormSheet({token}:{token: string}) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button size="sm" className="bg-primary">Create new fx</Button>
+                <Button size="sm" className="bg-primary">Add New Fx</Button>
             </SheetTrigger>
             <SheetContent side="right">
                 <SheetHeader>

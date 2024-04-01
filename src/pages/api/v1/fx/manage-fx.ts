@@ -15,8 +15,9 @@ export const GET: APIRoute = async ({ request }) => {
                     select: {
                         fxBidder: {
                             select: {
+                                id: true,
                                 firstName: true,
-                                lastName: true
+                                lastName: true,
                             }
                         }
                     }

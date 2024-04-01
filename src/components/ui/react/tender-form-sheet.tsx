@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { RecepientFormSheet } from './recepient-form-sheet';
 import { FileUploader } from './uploader';
+import { ReloadAfter } from '@/utilities/helpers/reload';
 
 
 export function TenderFormSheet({token}: {token: string}) {
@@ -78,7 +79,7 @@ export function TenderFormSheet({token}: {token: string}) {
             window.localStorage.removeItem('@recipients')
             toast.success(responseMessage.message);
             setOpen(false)
-            window.location.reload();
+            ReloadAfter(1500)
         } else {
             setLoading(false);
             toast.error(responseMessage.message);

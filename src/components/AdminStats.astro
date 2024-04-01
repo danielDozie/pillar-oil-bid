@@ -1,8 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 
-const {data} = Astro.props;
-
+const { data } = Astro.props;
 ---
 
 <div class="flex flex-col gap-x-4 ml-20 w-[calc(100%-5rem)] px-4 mt-24 mb-8">
@@ -14,7 +13,9 @@ const {data} = Astro.props;
     <div class="w-1/4 bg-slate-100 dark:bg-natural rounded-lg p-4 shadow-md">
       <h2 class="font-semibold text-foreground text-lg mb-2">Active Tenders</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">{data?.activeTenderCount}</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {data?.activeTenderCount}
+        </p>
         <Icon
           name="majesticons:analytics"
           size={40}
@@ -27,7 +28,9 @@ const {data} = Astro.props;
     >
       <h2 class="font-semibold text-lg mb-2">Total Tenders</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">{data?.totalTender}</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {data?.totalTender}
+        </p>
         <Icon
           name="majesticons:analytics-line"
           size={40}
@@ -38,9 +41,11 @@ const {data} = Astro.props;
     <div
       class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
-      <h2 class="font-semibold text-lg mb-2">Awarded Tenders</h2>
+      <h2 class="font-semibold text-lg mb-2">Accepted</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">0</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {data?.acceptedBidsCount}
+        </p>
         <Icon
           name="majesticons:analytics-plus-line"
           size={40}
@@ -53,7 +58,9 @@ const {data} = Astro.props;
     >
       <h2 class="font-semibold text-lg mb-2">Active Tenders (No Bids)</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">{data?.activeNoBid}</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {data?.activeNoBid}
+        </p>
         <Icon
           name="majesticons:analytics-restricted-line"
           size={43}
@@ -69,7 +76,9 @@ const {data} = Astro.props;
     >
       <h2 class="font-semibold text-lg mb-2">Vendors</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">{data?.totalVendor}</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {data?.totalVendor}
+        </p>
         <Icon
           name="majesticons:folder"
           size={40}
@@ -82,7 +91,9 @@ const {data} = Astro.props;
     >
       <h2 class="font-semibold text-lg mb-2">Verified vendors</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">{data?.verifiedVendorsCount}</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {data?.verifiedVendorsCount}
+        </p>
         <Icon
           name="majesticons:scan-user"
           size={40}
@@ -135,15 +146,19 @@ const {data} = Astro.props;
         </tr>
       </thead>
       <tbody>
-        {data?.tenders?.map((item) => (
-          <tr class="border-t border-gray-200 dark:border-gray-700">
-          <td class="py-4 px-4">{item?.title}</td>
-          <td class="py-4 px-4">{item?.location}</td>
-          <td class="py-4 px-4">{new Date(item?.endDate).toDateString()}</td>
-          <td class="py-4 px-4">0</td>
-          <td class="py-4 px-4">0 (0%)</td>
-        </tr>
-        ))}
+        {
+          data?.tenders?.map((item) => (
+            <tr class="border-t border-gray-200 dark:border-gray-700">
+              <td class="py-4 px-4">{item?.title}</td>
+              <td class="py-4 px-4">{item?.location}</td>
+              <td class="py-4 px-4">
+                {new Date(item?.endDate).toDateString()}
+              </td>
+              <td class="py-4 px-4">0</td>
+              <td class="py-4 px-4">0 (0%)</td>
+            </tr>
+          ))
+        }
       </tbody>
     </table>
   </div>

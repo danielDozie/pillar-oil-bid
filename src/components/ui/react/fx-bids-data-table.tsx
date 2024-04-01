@@ -41,23 +41,31 @@ import { Badge } from "./badge"
 import { formatDate, formatTime } from "@/utilities/helpers/time-formatter";
 import { formatCurrency } from "@/utilities/helpers/formatCurrency";
 
-export type FX = {
-    id: number;
+type FX = {
     title: string;
-    currency: string;
-    amount: string;
     startTime: Date;
     endTime: Date;
-    status: "pending" | "open" | "expired" | "sent";
-    note: string;
-    submissionDate: Date;
-    lastUpdatedDate: Date;
 };
 
-export function FXDataTable({ data }: { data: any }) {
+type FXBid = {
+    fx: FX;
+};
+
+type FXBIDS = {
+    id: number;
+    title: string;
+    status: string;
+    amount: string;
+    orderStatus: string;
+    startTime: Date;
+    endTime: Date;
+    fxBid?: FXBid;
+};
+
+export function FXBidsDataTable({ data }: { data: any }) {
 
 
-    const columns: ColumnDef<FX>[] = [
+    const columns: ColumnDef<FXBIDS>[] = [
         {
             id: "select",
             header: ({ table }) => (
@@ -84,35 +92,35 @@ export function FXDataTable({ data }: { data: any }) {
             accessorKey: "id",
             header: "Id",
             cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("id")}</div>
+                <div className="capitalize">{`POL RFX-FB`+row.getValue("id")}</div>
             ),
         },
         {
             accessorKey: "title",
             header: "Title",
             cell: ({ row }) => (
-                <div className="capitalize text-clip">{row.original.title}</div>
+                <div className="capitalize text-clip">{row.original.fxBid?.fx?.title}</div>
             ),
         },
         {
             accessorKey: "amount",
             header: "Amount",
             cell: ({ row }) => (
-                <div className="uppercase">{row.original.currency + " " + formatCurrency(Number(row.original.amount))}</div>
+                <div className="uppercase">{formatCurrency(Number(row.original.amount))}</div>
             ),
         },
         {
             accessorKey: "startTime",
             header: "Start Time",
             cell: ({ row }) => (
-                <div className="capitalize">{formatTime(row.original.startTime)}</div>
+                <div className="capitalize">{formatTime(row.original.fxBid?.fx?.startTime)}</div>
             ),
         },
         {
             accessorKey: "endTime",
             header: "End Time",
             cell: ({ row }) => (
-                <div className="capitalize">{formatTime(row.original.endTime)}</div>
+                <div className="capitalize">{formatTime(row.original.fxBid?.fx?.endTime)}</div>
             ),
         },
         {
@@ -129,7 +137,7 @@ export function FXDataTable({ data }: { data: any }) {
                     </Button>
                 )
             },
-            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'expired' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
+            cell: ({ getValue }) => (String(getValue()) === 'placed' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : String(getValue()) === 'rejected' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : String(getValue()) === 'accepted' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200 uppercase">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200 uppercase">{`Error`}</Badge>)
         },
         {
             id: "actions",
@@ -149,7 +157,7 @@ export function FXDataTable({ data }: { data: any }) {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <a href={`/u/fx/fx/manage/${Number(row.original.id)}`}>Manage Fx</a>
+                                <a href={`/u/fx/bids/manage/${Number(row.original.id)}`}>Manage Fx Bid</a>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
