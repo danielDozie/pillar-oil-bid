@@ -2,11 +2,11 @@
 import Text from "../../../../components/Text.astro";
 import { BidPlacementDataTable } from "@/components/ui/react/bid-placments-data-table";
 import OperatorLayout from "@/layouts/OperatorLayout.astro";
+import { Headers } from "@/constants";
 
-const res = await fetch(
-  `${process.env.API_ENDPOINT}/v1/bids/bid-placement`,
-  {}
-);
+const res = await fetch(`${process.env.API_ENDPOINT}/v1/bids/bid-placement`, {
+  headers: Headers,
+});
 const bids = await res.json();
 
 //@ts-ignore

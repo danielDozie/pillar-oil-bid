@@ -93,7 +93,7 @@ export function VendorFormSheet({token}: {token:string}) {
                                 htmlFor="terms"
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground"
                             >
-                                Falcon registration?
+                                JV registration?
                             </label>
                             <Checkbox checked={checked} onCheckedChange={() => setChecked(!checked)}  name="falcon_registration" />
                         </div>

@@ -1,3 +1,4 @@
+import { FROM_NAME, RESEND_OTP_HTML } from "@/constants/notifications/email";
 import type { APIRoute } from "astro";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer"
@@ -37,20 +38,11 @@ export const GET: APIRoute = async ({ cookies, request }) => {
 
     // // Send mail with defined transport object
     let info = await transporter.sendMail({
-        from: `"Pillar Bids" <no-reply@pillarbid.com>`, // Sender address
+        from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
         to: email, // List of receivers
         subject: "Verify your account", // Subject line
         text: `Your OTP is ${otp}`, // Plain text body
-        html: `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Confirm your OTP</h1>
-                <p style="color: #555; font-size: 16px; margin: 20px 0;">Verify your account with the one-time password (OTP) below:</p>
-                <div style="background-color: #f8f8f8; padding: 10px; border-radius: 5px; margin: 20px 0;">
-                    <h3 style="font-size: 20px; font-weight: bold; color: #007bff;">${otp}</h3>
-                </div>
-                <p style="color: #555; font-size: 14px;">Keep this code safe. It's valid for 15 minutes.</p>
-            </div>
-            `, // HTML body content
+        html: RESEND_OTP_HTML(otp)
     });
     if (info?.messageId) {
         // Save OTP in cookies with a TTL of 15 minutes

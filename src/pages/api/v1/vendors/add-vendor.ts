@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { generateRandomPassword } from '@/utilities/helpers/generatePassword';
 import { transporter } from '@/utilities/helpers/emailTransporter';
 import { prisma } from '@/utilities/helpers/prismaInstace';
+import { ADD_VENDOR_HTML, FROM_NAME } from '@/constants/notifications/email';
 
 // Generate a salt for hashing passwords
 const salt = bcrypt.genSaltSync(10);
@@ -52,19 +53,11 @@ export const POST: APIRoute = async ({ request, redirect }) => {
         if (user?.id) {
             // Send mail with defined transport object
             let info = await transporter.sendMail({
-                from: `"Pillar Bids" <${process.env.MAIL_USERNAME}>`, // Sender address
+                from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
                 to: email, // List of receivers
-                subject: "Welcome to Pillar Bids/Fx", // Subject line
-                text: `Welcome to Pillar Bids/Fx`, // Plain text body
-                html: `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Welcome to Pillar Bids/Fx, ${companyName}!</h1>
-                <p style="color: #555; font-size: 16px; margin: 20px 0;">Your account has been successfully created.</p>
-                <p style="color: #555; font-size: 16px; margin: 20px 0;">Please use the link below to set your password and start exploring our services:</p>
-                <a href="${process.env.HOST}/auth/set-password?token=${token}" style="display: inline-block; background-color: #007bff; color: #ffffff; padding: 10px 20px; margin: 20px 0; border-radius: 5px; text-decoration: none;">Set Your Password</a>
-                <p style="color: #555; font-size: 14px;">This link will expire in 24 hours.</p>
-            </div>
-            `, // HTML body content
+                subject: "Welcome to POL RFX", // Subject line
+                text: `Welcome to POL RFX`, // Plain text body
+                html: ADD_VENDOR_HTML(companyName, token)
             });
 
             if (info.messageId) {

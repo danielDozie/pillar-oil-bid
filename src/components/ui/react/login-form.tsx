@@ -7,7 +7,8 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 
 export default function LoginForm({token}: {token: string}) {
     const [loading, setLoading] = useState(false);
-    const handleLogin = async () => {
+    const handleLogin = async (evt: { preventDefault: () => void }) => {
+        evt.preventDefault();
         setLoading(true);
         const email = (document.querySelector('input[name="email"]') as HTMLInputElement).value;
         const password = (document.querySelector('input[name="password"]') as HTMLInputElement).value;
@@ -25,7 +26,6 @@ export default function LoginForm({token}: {token: string}) {
                 }
             });
             const res = data;
-            console.log(res);
             const responseMessage = await res.json();
             
             if (res.status === 200) {
@@ -42,7 +42,7 @@ export default function LoginForm({token}: {token: string}) {
         
     }
     return (
-        <div
+        <form
             className="flex flex-col h-full justify-center self-center items-center align-middle"
             slot="auth-slot"
         >
@@ -68,9 +68,10 @@ export default function LoginForm({token}: {token: string}) {
                         Forgot password?
                     </a>
                 </div>
-                <Button disabled={loading} className="w-2/3 bg-primary" onClick={handleLogin}>
+                <Button disabled={loading} type='submit' className="w-2/3 bg-primary" onClick={handleLogin}>
                     {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-                    Login</Button>
+                    Login
+                </Button>
             </div>
 
             <div className="relative my-4">
@@ -87,6 +88,6 @@ export default function LoginForm({token}: {token: string}) {
             >
                 <GoogleAuth />
             </form> */}
-        </div>
+        </form>
   )
 }

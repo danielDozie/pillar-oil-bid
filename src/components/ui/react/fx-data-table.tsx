@@ -48,7 +48,7 @@ export type FX = {
     amount: string;
     startTime: Date;
     endTime: Date;
-    status: "pending" | "open" | "expired" | "sent";
+    status: "pending" | "open" | "closed" | "sent";
     note: string;
     submissionDate: Date;
     lastUpdatedDate: Date;
@@ -129,7 +129,7 @@ export function FXDataTable({ data }: { data: any }) {
                     </Button>
                 )
             },
-            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'expired' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
+            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'closed' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
         },
         {
             id: "actions",

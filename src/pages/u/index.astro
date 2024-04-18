@@ -1,4 +1,9 @@
 ---
+import {
+  ADMIN_OTP_EMAIL,
+  APPROVE_SIGN_IN_HTML,
+FROM_NAME,
+} from "@/constants/notifications/email";
 import { transporter } from "@/utilities/helpers/emailTransporter";
 //@ts-ignore
 const role = Astro.locals?.user?.user?.role;
@@ -16,20 +21,11 @@ if (role) {
 
       // Send mail with defined transport object
       let info = await transporter.sendMail({
-        from: `"POL RFX." <${process.env.MAIL_USERNAME}>`, // Sender address
-        to: `luchidan63@gmail.com`, // admin email addresses receivers
+        from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
+        to: ADMIN_OTP_EMAIL, // admin email addresses receivers
         subject: "Approve Sign-in", // Subject line
         text: `Your Sign-in OTP is ${otp}`, // Plain text body
-        html: `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Approve Sign-in</h1>
-                <p style="color: #555; font-size: 16px; margin: 20px 0;">Approve an operator account sign-in with the one-time pin (OTP) below:</p>
-                <div style="background-color: #f8f8f8; padding: 10px; border-radius: 5px; margin: 20px 0;">
-                    <h3 style="font-size: 20px; font-weight: bold; color: #007bff;">${otp}</h3>
-                </div>
-                <p style="color: #555; font-size: 14px;">Keep this code safe. It's valid for 15 minutes.</p>
-            </div>
-            `, // HTML body content
+        html: APPROVE_SIGN_IN_HTML(otp), // HTML body content
       });
 
       Astro.cookies.set("otp-type", "approve-sign-in");
@@ -43,7 +39,7 @@ if (role) {
         return Astro.redirect(`/auth/confirm-otp`, 302);
       }
     }
-  };
+  }
   return Astro.redirect(`/u/${role}`, 302);
 }
 

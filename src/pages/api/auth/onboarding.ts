@@ -1,3 +1,4 @@
+import { FROM_NAME, ONBOARDING_COMPLETE_HTML } from "@/constants/notifications/email";
 import { PrismaClient } from "@prisma/client";
 import type { APIRoute } from "astro";
 import jwt from "jsonwebtoken";
@@ -47,20 +48,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
                 // Send mail with defined transport object
                 let info = await transporter.sendMail({
-                    from: `"POL RFX" <no-reply@pillarbid.com>`, // Sender address
+                    from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
                     to: email, // List of receivers
                     subject: "Welcome to POL RFX", // Subject line
                     text: `Welcome to POL RFX`, // Plain text body
-                    html: `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Welcome to POL RFX</h1>
-                <p style="color: #555; font-size: 16px; margin: 20px 0;">Welcome ${payload.companyName}, your account registration is complete</p>
-                <div style="background-color: #f8f8f8; padding: 10px; border-radius: 5px; margin: 20px 0;">
-                    <p style="font-size: 16px; color: gray;">You have successfully regstered on pillar bids platform. ,<br/>Ensure you follow all our guidlines to avoid desciplinary actions against you.<br/><br/>Feel free to reach out to us for any inquiry.</p>
-                </div>
-                <p style="color: #555; font-size: 14px;">&copy; 2024. Pillar bids.</p>
-            </div>
-            `, // HTML body content
+                    html: ONBOARDING_COMPLETE_HTML(payload?.companyName, 'Pillar Bid'), 
                 });
                 if (info.messageId) {
                     return new Response(JSON.stringify({ message: "Onboarding complete!" }), { status: 200 })
@@ -111,20 +103,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
                     // Send mail with defined transport object
                     let info = await transporter.sendMail({
-                        from: `"POL RFX" <no-reply@pillarbid.com>`, // Sender address
+                        from: `${FROM_NAME}  <${process.env.MAIL_USERNAME}>`, // Sender address
                         to: email, // List of receivers
                         subject: "Welcome to POL RFX", // Subject line
                         text: `Welcome to POL RFX`, // Plain text body
-                        html: `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px;">
-                <h1 style="color: #333; font-size: 24px;">Welcome to POL RFX</h1>
-                <p style="color: #555; font-size: 16px; margin: 20px 0;">Welcome ${payload.firstName}, your account registration is complete</p>
-                <div style="background-color: #f8f8f8; padding: 10px; border-radius: 5px; margin: 20px 0;">
-                    <p style="font-size: 16px; color: gray;">You have successfully regstered on pillar fx platform. ,<br/>Ensure you follow all our guidlines to avoid desciplinary actions against you.<br/><br/>Feel free to reach out to us for any inquiry.</p>
-                </div>
-                <p style="color: #555; font-size: 14px;">&copy; ${new Date().getFullYear()}. Pillar fx.</p>
-            </div>
-            `, // HTML body content
+                        html: ONBOARDING_COMPLETE_HTML(payload?.firstName, 'Pillar Fx'),
                     });
                     if (info.messageId) {
                         return new Response(JSON.stringify({ message: "Onboarding complete!" }), { status: 200 })

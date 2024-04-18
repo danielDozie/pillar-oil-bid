@@ -1,0 +1,6 @@
+{
+  "crons": [{
+    "path": "/api/cron/check-tender-status",
+    "schedule": "0 0 * * *"
+  }]
+}

@@ -6,6 +6,7 @@ export const GET: APIRoute = async () => {
     include: {
       items: true,
       files: true,
+      bids: true
     }
   });
   if (tenders) {

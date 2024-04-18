@@ -1,7 +1,10 @@
 ---
+import { formatDate } from "@/utilities/helpers/time-formatter";
 import { Icon } from "astro-icon/components";
 
 const { data } = Astro.props;
+
+const tenderExpiringSoon = await data?.tenderExpiringSoon();
 ---
 
 <div class="flex flex-col gap-x-4 ml-20 w-[calc(100%-5rem)] px-4 mt-24 mb-8">
@@ -41,10 +44,10 @@ const { data } = Astro.props;
     <div
       class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
-      <h2 class="font-semibold text-lg mb-2">Accepted</h2>
+      <h2 class="font-semibold text-lg mb-2">Accepted/Rejected</h2>
       <span class="flex justify-between">
         <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
-          {data?.acceptedBidsCount}
+          {data?.acceptedBidsCount + "/" + data?.acceptedBidsCount}
         </p>
         <Icon
           name="majesticons:analytics-plus-line"
@@ -141,21 +144,21 @@ const { data } = Astro.props;
           <th class="py-4 px-4 font-semibold">Tender Name</th>
           <th class="py-4 px-4 font-semibold">Tender location</th>
           <th class="py-4 px-4 font-semibold">Due date/time</th>
-          <th class="py-4 px-4 font-semibold">Bid invite</th>
-          <th class="py-4 px-4 font-semibold">Received</th>
+          <th class="py-4 px-4 font-semibold">Status</th>
+          <th class="py-4 px-4 font-semibold">Invites</th>
         </tr>
       </thead>
       <tbody>
         {
-          data?.tenders?.map((item) => (
+          tenderExpiringSoon?.map((item) => (
             <tr class="border-t border-gray-200 dark:border-gray-700">
               <td class="py-4 px-4">{item?.title}</td>
               <td class="py-4 px-4">{item?.location}</td>
-              <td class="py-4 px-4">
-                {new Date(item?.endDate).toDateString()}
+              <td class="py-4 px-4 text-red-600 font-semibold">
+                {formatDate(item?.endDate)}
               </td>
-              <td class="py-4 px-4">0</td>
-              <td class="py-4 px-4">0 (0%)</td>
+              <td class="py-4 px-4 font-semibold">{item?.status}</td>
+              <td class="py-4 px-4">{item?.bids?.length}</td>
             </tr>
           ))
         }

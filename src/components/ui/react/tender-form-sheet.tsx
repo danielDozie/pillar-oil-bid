@@ -13,18 +13,18 @@ import { ReloadAfter } from '@/utilities/helpers/reload';
 export function TenderFormSheet({token}: {token: string}) {
 
     const [open, setOpen] = useState(false);
-    const [items, setItems] = useState([{ name: '', quantity: '', unit: '' }]);
+    // const [items, setItems] = useState([{ name: '', quantity: '', unit: '' }]);
 
-    const handleAddItem = () => {
-        setItems([...items, { name: '', quantity: '', unit: '' }]);
-    };
+    // const handleAddItem = () => {
+    //     setItems([...items, { name: '', quantity: '', unit: '' }]);
+    // };
 
-    const handleItemChange = (index, event) => {
-        const { name, value } = event.target;
-        const updatedItems = [...items];
-        updatedItems[index][name] = value;
-        setItems(updatedItems);
-    };
+    // const handleItemChange = (index, event) => {
+    //     const { name, value } = event.target;
+    //     const updatedItems = [...items];
+    //     updatedItems[index][name] = value;
+    //     setItems(updatedItems);
+    // };
 
     const [loading, setLoading] = useState(false);
 
@@ -52,7 +52,7 @@ export function TenderFormSheet({token}: {token: string}) {
             location: (document.querySelector('input[name="location"]') as HTMLInputElement).value,
             startDate: (document.querySelector('input[name="start-date"]') as HTMLInputElement).value,
             endDate: (document.querySelector('input[name="end-date"]') as HTMLInputElement).value,
-            items: items,
+            // items: items,
             files: files,
             recipients: formattedRecipients
         };
@@ -101,11 +101,11 @@ export function TenderFormSheet({token}: {token: string}) {
 
                     <span className="w-full space-y-1">
                         <label className="text-xs text-muted-foreground" htmlFor="title">Title</label>
-                        <Input type="text" name="title" placeholder="Bid title" className="border text-xs text-muted-foreground" />
+                        <Input type="text" name="title" placeholder="Tender title" className="border text-xs text-muted-foreground" />
                     </span>
                     <span className="w-full space-y-1">
                         <label className="text-xs text-muted-foreground" htmlFor="description">Description</label>
-                        <Textarea name="description" placeholder="Write a simple description of this bid" className="text-xs border text-muted-foreground  focus-visible:ring-0 dark:border-slate-100" />
+                        <Textarea name="description" placeholder="Write a simple description of this tender" className="text-xs border text-muted-foreground  focus-visible:ring-0 dark:border-slate-100" />
                     </span>
                     <span className="w-full space-y-1">
                         <label className="text-xs text-muted-foreground" htmlFor="location">Location</label>
@@ -123,7 +123,7 @@ export function TenderFormSheet({token}: {token: string}) {
                             <Input type="date" name="end-date" placeholder="End date" className="border text-xs text-muted-foreground" />
                         </span>
                     </div>
-                    <div className="w-full">
+                    {/* <div className="w-full">
                         <label className="text-xs text-muted-foreground" htmlFor="items">Item(s)</label>
                         {items.map((item, index) => (
                             <div key={index} className="flex justify-betweeen my-2 space-x-2">
@@ -161,7 +161,7 @@ export function TenderFormSheet({token}: {token: string}) {
                         >
                             + Add more
                         </Button>
-                    </div>
+                    </div> */}
                     <div className="w-full flex flex-col space-y-2">
 
                         <div className='flex justify-between my-2'>

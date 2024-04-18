@@ -49,6 +49,7 @@ export type Vendors = {
     userId: number
     user: {
         verified: boolean
+        falconRegistration: boolean
     }
 }
 
@@ -105,6 +106,14 @@ export function VendorDataTable({ data, role }: { data: Vendors[], role: string 
             header: "Phone",
             cell: ({ row }) => (
                 <div className="capitalize">{row.getValue("businessPhone")}</div>
+            ),
+        },
+        {
+            accessorFn: (row) => row.user.falconRegistration ? 'JV' : 'POL',
+            id: 'falconRegistration',
+            header: 'Reg. Type', //use Reg. Type as the name to satisfy the boolean value of falcon registration 
+            cell: ({ row }) => (
+                <div className="capitalize font-semibold">{row.getValue("falconRegistration")}</div>
             ),
         },
         {
@@ -175,17 +184,17 @@ export function VendorDataTable({ data, role }: { data: Vendors[], role: string 
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter emails..."
-                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+                    placeholder="Filter company name..."
+                    value={(table.getColumn("companyName")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("email")?.setFilterValue(event.target.value)
+                        table.getColumn("companyName")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm bg-white dark:bg-background-color !text-foreground"
                 />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto bg-white dark:bg-background-color text-foreground border-0">
-                            Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+                            View <ChevronDownIcon className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -202,7 +211,7 @@ export function VendorDataTable({ data, role }: { data: Vendors[], role: string 
                                             column.toggleVisibility(!!value)
                                         }
                                     >
-                                        {column.id}
+                                        {column.id === "falconRegistration" ? "Reg. Type" : column.id}
                                     </DropdownMenuCheckboxItem>
                                 )
                             })}

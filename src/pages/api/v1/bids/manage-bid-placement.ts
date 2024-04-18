@@ -1,3 +1,5 @@
+import { BID_ACCEPTANCE_HTML, BID_REJECTION_HTML } from "@/constants/notifications/email";
+import { transporter } from "@/utilities/helpers/emailTransporter";
 import { prisma } from "@/utilities/helpers/prismaInstace";
 import type { APIRoute } from "astro";
 
@@ -40,7 +42,15 @@ export const POST: APIRoute = async ({request}) => {
                     data: {
                         status: 'accepted'
                     }
-                })
+                });
+                //send acceptance email
+                await transporter.sendMail({
+                    from: `"POL RFX" <${process.env.MAIL_USERNAME}>`,
+                    to: res.email,
+                    subject: "Bid Accepted",
+                    html: BID_ACCEPTANCE_HTML(res.companyName, res.title),
+                });
+
                 break;
             case 'reject':
                 await prisma.bidPlacement.update({
@@ -50,7 +60,14 @@ export const POST: APIRoute = async ({request}) => {
                     data: {
                         status: 'rejected'
                     }
-                })
+                });
+                //send rejection email
+                await transporter.sendMail({
+                    from: `"POL RFX" <${process.env.MAIL_USERNAME}>`,
+                    to: res.email,
+                    subject: "Bid Rejected",
+                    html: BID_REJECTION_HTML(res.companyName, res.title),
+                });
                 break;
             default:
                 break;

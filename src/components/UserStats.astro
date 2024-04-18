@@ -10,6 +10,14 @@ const userBids = result?.data;
 const activeBid = userBids?.filter((bid) => bid.status === "open")?.length;
 const totalBids = userBids?.length;
 
+const acceptedBidPlacements = userBids?.reduce((accumulator, bid) => {
+  const acceptedPlacements =
+    bid.tender?.BidPlacement?.filter(
+      (placement) => placement.status === "accepted"
+    )?.length || 0;
+  return accumulator + acceptedPlacements;
+}, 0);
+
 //get total documents uploaded by user
 const documents = userBids?.reduce((accumulator, item) => {
   if (item.tender) {
@@ -84,7 +92,9 @@ const tenders = userBids?.map(({ tender }) => {
     >
       <h2 class="font-semibold text-lg mb-2">Won/Lost</h2>
       <span class="flex justify-between">
-        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">0</p>
+        <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
+          {acceptedBidPlacements+'/'+0}
+        </p>
         <Icon
           name="majesticons:analytics-restricted-line"
           size={43}
@@ -125,7 +135,7 @@ const tenders = userBids?.map(({ tender }) => {
                   <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">
                     {`pending`}
                   </Badge>
-                ) : item?.status === "expired" ? (
+                ) : item?.status === "closed" ? (
                   <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">
                     {item?.status}
                   </Badge>

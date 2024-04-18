@@ -46,7 +46,7 @@ export type Tender = {
     id: number;
     title: string;
     description: string;
-    status: "pending" | "open" | "expired" | "sent";
+    status: "pending" | "open" | "closed" | "sent";
     location: string;
     startDate: Date;
     endDate: Date;
@@ -104,14 +104,14 @@ export function TendersDataTable({ data, role }: { data: any, role: string }) {
         },
         {
             accessorKey: "startDate",
-            header: "Start date",
+            header: "Start Date",
             cell: ({ row }) => (
                 <div className="capitalize">{new Date(row.getValue("startDate")).toDateString()}</div>
             ),
         },
         {
             accessorKey: "endDate",
-            header: "End date",
+            header: "End Date",
             cell: ({ row }) => (
                 <div className="capitalize">{new Date(row.getValue("endDate")).toDateString()}</div>
             ),
@@ -130,7 +130,7 @@ export function TendersDataTable({ data, role }: { data: any, role: string }) {
                     </Button>
                 )
             },
-            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'expired' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
+            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'closed' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
         },
         {
             id: "actions",
@@ -202,7 +202,7 @@ export function TendersDataTable({ data, role }: { data: any, role: string }) {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto bg-white dark:bg-background-color text-foreground border-0">
-                            Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+                            View <ChevronDownIcon className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

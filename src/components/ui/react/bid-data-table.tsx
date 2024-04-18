@@ -41,7 +41,7 @@ import { Badge } from "./badge"
 
 export type Bid = {
     id: number;
-    status: "pending" | "open" | "expired" | "sent";
+    status: "pending" | "open" | "closed" | "sent";
     tender: {
         title: string;
         description: string;
@@ -134,13 +134,14 @@ export function BidsDataTable({ data }: { data: any }) {
                     </Button>
                 )
             },
-            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'expired' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
+            cell: ({ getValue }) => (String(getValue()) === 'pending' ? <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'sent' ? <Badge className="bg-primary hover:bg-primary px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'closed' ? <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : String(getValue()) === 'open' ? <Badge className="bg-green-600 hover:bg-green-600 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge> : <Badge className="bg-gray-500 hover:bg-gray-500 px-4 text-[10px] text-slate-200">{String(getValue())}</Badge>)
         },
         {
             accessorKey: "tender.BidPlacement",
             header: "Bid Order",
             cell: ({ row }) => (
-                <div className="capitalize">{row?.original?.tender?.BidPlacement[0].status === 'rejected' ? <p className="text-red-600 dark:text-red-400 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0].status}</p> : (row?.original?.tender?.BidPlacement[0].status === 'accepted' || row?.original?.tender?.BidPlacement[0].status === 'placed') ? <p className="text-green-600 dark:text-green-400 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0]?.status}</p> : <p className="text-gray-500 dark:text-gray-500 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0]?.status}</p>}</div>
+                <div className="capitalize">{row?.original?.tender?.BidPlacement[0]?.status === 'rejected' ? <p className="text-red-600 dark:text-red-400 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0]?.status}</p> :
+                (row?.original?.tender?.BidPlacement[0]?.status === 'accepted' || row?.original?.tender?.BidPlacement[0]?.status === 'placed') ? <p className="text-green-600 dark:text-green-400 font-medium text-sm uppercase">{row?.original?.tender?.BidPlacement[0]?.status}</p> : <p className="text-gray-500 dark:text-gray-500 font-medium text-sm uppercase">{`Not Placed`}</p>}</div>
             ),
         },
         {

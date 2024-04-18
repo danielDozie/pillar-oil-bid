@@ -116,7 +116,7 @@ export default function ManageFxComponent({ data }: { data: any }) {
                                                   <Badge className="bg-primary hover:bg-primary px-4 text-[14px] text-slate-200">
                                                       {data?.fx?.status}
                                                   </Badge>
-                                              ) : data?.fx?.status === "expired" ? (
+                                              ) : data?.fx?.status === "closed" ? (
                                                   <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[14px] text-slate-200">
                                                       {data?.fx?.status}
                                                   </Badge>

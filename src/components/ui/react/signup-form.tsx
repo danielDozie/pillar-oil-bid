@@ -7,7 +7,8 @@ import { ReloadIcon } from "@radix-ui/react-icons"
 
 export default function SignupForm() {
     const [loading, setLoading] = useState(false);
-    const handleSignup = async () => {
+    const handleSignup = async (evt: { preventDefault: () => void }) => {
+        evt.preventDefault();
         setLoading(true)
         const email = (document.querySelector('input[name="email"]') as HTMLInputElement).value;
         const password = (document.querySelector('input[name="password"]') as HTMLInputElement).value;
@@ -37,7 +38,7 @@ export default function SignupForm() {
 
     }
     return (
-        <div
+        <form
             className="flex flex-col h-full justify-center self-center items-center align-middle"
         >
             <div
@@ -58,7 +59,7 @@ export default function SignupForm() {
                     className="flex h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-2/3 mb-4"
                 />
 
-                <Button disabled={loading} className="w-2/3 bg-primary" onClick={handleSignup}>
+                <Button disabled={loading} type='submit' className="w-2/3 bg-primary" onClick={handleSignup}>
                     {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                     Signup</Button>
             </div>
@@ -77,6 +78,6 @@ export default function SignupForm() {
             >
                 <GoogleAuth />
             </form> */}
-        </div>
+        </form>
     )
 }

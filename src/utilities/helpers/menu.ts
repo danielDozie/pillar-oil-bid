@@ -9,7 +9,6 @@ export const menu = {
     ],
     lower: [
       { id: 6, name: "Settings", icon: "majesticons:cog", link: "/u/admin/settings" },
-      { id: 7, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
     ]
   },
   operator: {
@@ -22,7 +21,6 @@ export const menu = {
     ],
     lower: [
       { id: 6, name: "Settings", icon: "majesticons:cog", link: "/u/operator/settings" },
-      { id: 7, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
     ]
   },
   user: {
@@ -32,7 +30,7 @@ export const menu = {
       { id: 3, name: "Report", icon: "majesticons:noteblock-text", link: "/u/user/report" },
     ],
     lower: [
-      { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/user/settings" },
+      // { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/user/settings" },
       { id: 5, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
     ]
   },
@@ -45,7 +43,6 @@ export const menu = {
     ],
     lower: [
       { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/fx/settings" },
-      { id: 5, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
     ]
   },
   fxUser: {
@@ -54,7 +51,6 @@ export const menu = {
       { id: 3, name: "Report", icon: "majesticons:noteblock-text", link: "/u/fx-user/report" },
     ],
     lower: [
-      { id: 5, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
     ]
   },
 } as const;

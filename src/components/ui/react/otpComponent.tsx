@@ -32,7 +32,14 @@ const OtpComponent = ({ otpValue, otpType }: { otpValue: number, otpType?: strin
                 if (otp === otpValue) {
                     Cookies.set('otp-verified', 'true', { path: '/' });
                     Cookies.remove("otp-type", { path: '/' });
-                    window.location.replace('/u');
+                    setLoading(false);
+                    toast.success("OTP Verified")
+                    setTimeout(() => {
+                        window.location.replace('/u');
+                    }, 1500);
+                } else {
+                    setLoading(false);
+                    toast.error("OTP Verification failed")
                 }
                 break;
             default:
@@ -46,7 +53,7 @@ const OtpComponent = ({ otpValue, otpType }: { otpValue: number, otpType?: strin
                         toast.success("OTP Verified")
                         setTimeout(() => {
                             window.location.href = res.url;
-                        }, 2000);
+                        }, 1000);
                     }
                 }
                 else {
@@ -56,8 +63,7 @@ const OtpComponent = ({ otpValue, otpType }: { otpValue: number, otpType?: strin
                 }
                 break;
         }
-
-    }
+    };
 
     const resendOtp = async () => {
         const data = await fetch(`/api/auth/resend-otp`);
@@ -73,14 +79,13 @@ const OtpComponent = ({ otpValue, otpType }: { otpValue: number, otpType?: strin
             <h1 className="font-semibold text-3xl my-12">OTP Verification</h1>
             <OtpInput length={4} otp={otp} onOtpChange={handleOtpChange} />
             <div className="my-12">
-                <p className="text text-slate-500">
-                    Enter OTP sent to the email associated with your account
-                </p>
-                    <Button className="bg-transparent shadow-none p-0 hover:bg-unset" onClick={resendOtp}>
-                        <p className="text-xs my-2 text-slate-500">
-                            Not seen? Resend it.
-                        </p>
-                    </Button>
+                {otpType === "approve-sign-in" ? <p className="text text-slate-500">
+                    Request OTP from the system admin!
+                </p> : <Button className="bg-transparent shadow-none p-0 hover:bg-unset" onClick={resendOtp}>
+                    <p className="text-xs my-2 text-slate-500">
+                        Not seen? Resend it.
+                    </p>
+                </Button>}
 
                 <div className="flex flex-end justify-end">
                     <Button className="px-12 bg-primary" onClick={validateOtp}>

@@ -11,6 +11,10 @@ const name = Astro.locals?.user?.companyName || Astro.locals?.user?.firstName;
 //@ts-ignore
 const userRole = Astro.locals?.user?.user?.role;
 
+const res = await fetch(`${import.meta.env.API_ENDPOINT}/v1/settings`);
+const { data } = await res?.json();
+const appLogo = data?.settings[0].appLogo;
+const appName = data?.settings[0].appName;
 ---
 
 <div
@@ -18,8 +22,8 @@ const userRole = Astro.locals?.user?.user?.role;
 >
   <div class="flex w-full gap-x-20 justify-between text-foreground pt-4 px-4">
     <div class="w-2/5 flex gap-x-2 justify-start items-center">
-      <img src="/pillaroilLogo.png" width={20} height="auto" alt="logo" />
-      <h1 class="text-xl font-bold">{`POL RFX`}</h1>
+      <img src={appLogo} width={20} height="auto" alt="logo" />
+      <h1 class="text-xl font-bold">{appName}</h1>
     </div>
     <div
       class="w-full flex px-2 py-1 rounded-md bg-slate-100 dark:bg-natural/90 border dark:border-slate-100 text-sm"
@@ -44,18 +48,19 @@ const userRole = Astro.locals?.user?.user?.role;
     <div
       class="flex w-full gap-10 items-center bg-transparent text-foreground justify-end"
     >
-      <Icon name="majesticons:bell" size={24} />
+      <!-- <Icon name="majesticons:bell" size={24} /> -->
       <div class="flex gap-x-4 items-center">
         <Switch client:load />
         <AvatarComponent
           alt={`name`}
           src={``}
-          fallbackText={userRole === 
-            "fx" ?
-            "Fx Admin" : userRole === "operator" ?
-            "Operator" : userRole === 'admin' ? 
-            "Admin" : name
-            }
+          fallbackText={userRole === "fx"
+            ? "Fx Admin"
+            : userRole === "operator"
+              ? "Operator"
+              : userRole === "admin"
+                ? "Admin"
+                : name}
           client:load
         />
       </div>

@@ -9,6 +9,7 @@ const { tender } = Astro.params;
 const res = await fetch(
   `${process.env.API_ENDPOINT}/v1/tenders/manage-tender/?${new URLSearchParams({ tender }).toString()}`, { headers: Headers}
 );
+
 const token = Headers["x-pol-rfx-secret"];
 const data = await res.json();
 

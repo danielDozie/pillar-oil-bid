@@ -12,7 +12,9 @@ export const GET: APIRoute = async ({ request }) => {
                 id: Number(vendorId)
             },
             include: {
-                user: true
+                user: true,
+                BidPlacement: true,
+                Bid: true
             }
         });
         if (vendor) {
@@ -32,6 +34,7 @@ export const POST: APIRoute = async ({ request }) => {
         email: data.email,
         homePhone: data.homePhone,
         businessPhone: data.businessPhone,
+        address: data.address
     }
     try {
         const updatedVendor = await prisma.contractor.update({

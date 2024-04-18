@@ -30,11 +30,10 @@ export const POST: APIRoute = async ({ request }) => {
             // Update the tender status to "sent"
             const tenderUpdated = await prisma.tender.update({
                 where: { id: tenderId },
-                data: { status: "sent" }
+                data: { status: "sent", startDate: new Date()},
             });
             
             if (tenderUpdated?.status === "sent") {
-                console.log({ tenderUpdated })
                 return new Response(JSON.stringify({ message: "Tender sent succefully!" }), { status: 200 })
             };
         }

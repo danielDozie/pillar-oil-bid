@@ -74,6 +74,7 @@ model Contractor {
   email              String?        @unique
   homePhone          String?        @map("home_phone")
   businessPhone      String?        @map("business_phone")
+  address             String?       
   falconRegistration Boolean        @default(false) @map("falcon_registration")
   userId             Int?
   user               User?          @relation(fields: [userId], references: [id])
@@ -109,9 +110,13 @@ model Recipients {
 
 model Settings {
   id      Int    @id
-  appName String @map("app_name")
-  appUrl  String @map("app_url")
-  appLogo String @map("app_logo")
+  appName String? @map("app_name")
+  appUrl  String? @map("app_url")
+  appLogo String? @map("app_logo")
+  smtpHost String? @map("smtp_host")
+  smtpUser String? @map("smtp_user")
+  smtpPassword String? @map("smtp_password")
+  smtpPort String? @map("smtp_port")
 
   @@map("settings")
 }

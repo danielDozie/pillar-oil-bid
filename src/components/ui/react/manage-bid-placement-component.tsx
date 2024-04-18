@@ -12,11 +12,13 @@ export function ManageBidPlacementComponent({ result, documentPassword, token }:
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
 
-
     const handleBidPlacement = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         const payload = {
             id: result?.id,
+            email: result.contractor.email,
+            companyName: result.contractor.companyName,
+            title: result.tender.title,
             //@ts-ignore
             action: e?.target?.textContent.toLowerCase(),
         }
@@ -130,7 +132,7 @@ export function ManageBidPlacementComponent({ result, documentPassword, token }:
                                                 <Badge className="bg-primary hover:bg-primary px-4 text-[14px] text-slate-200">
                                                     {result?.tender?.status}
                                                 </Badge>
-                                            ) : result?.tender?.status === "expired" ? (
+                                            ) : result?.tender?.status === "closed" ? (
                                                 <Badge className="bg-red-600 hover:bg-red-600 px-4 text-[14px] text-slate-200">
                                                     {result?.tender?.status}
                                                 </Badge>

@@ -15,7 +15,7 @@ const res = await fetch(
 );
 const result = await res.json();
 const bidData = result?.bid;
-const placementStatus = bidData?.tender?.BidPlacement[0].status;
+const placementStatus = bidData?.tender?.BidPlacement[0]?.status;
 ---
 
 <UserLayout title="Manage bid">
