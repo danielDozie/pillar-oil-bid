@@ -9,7 +9,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     try {
         const updatedEndDate =  await transporter.sendMail({
-            from: `"POL RFX" <${process.env.MAIL_USERNAME}>`,
+            from: `"POL eRFX" <${process.env.MAIL_USERNAME}>`,
             to: process.env.ADMIN_EMAIL,
             subject: "Extend End Date OTP",
             html: EXTEND_END_DATE_OTP_HTML(otp),

@@ -1,6 +1,6 @@
 ---
 import FxLayout from "../../../../../layouts/FxLayout.astro";
-import { Headers } from "@/constants";
+import { HEADER_TOKEN, Headers } from "@/constants";
 import { ManageFxBidComponent } from "../../../../../components/ui/react/manage-fx-bid-component";
 
 const { bid } = Astro.params;
@@ -10,9 +10,8 @@ const res = await fetch(
   { headers: Headers }
 );
 const result = await res?.json();
-
 ---
 
 <FxLayout title=`Manage Fx Bid | ${result[0]?.fxBid?.fx?.title}`>
-  <ManageFxBidComponent data={result} client:load />
+  <ManageFxBidComponent token={HEADER_TOKEN} data={result} client:load />
 </FxLayout>

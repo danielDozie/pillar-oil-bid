@@ -45,9 +45,9 @@ export const POST: APIRoute = async ({request}) => {
                 });
                 //send acceptance email
                 await transporter.sendMail({
-                    from: `"POL RFX" <${process.env.MAIL_USERNAME}>`,
+                    from: `"POL eRFX" <${import.meta.env.MAIL_USERNAME}>`,
                     to: res.email,
-                    subject: "Bid Accepted",
+                    subject: import.meta.env.BID_EMAIL_SUBJECT,
                     html: BID_ACCEPTANCE_HTML(res.companyName, res.title),
                 });
 
@@ -63,9 +63,9 @@ export const POST: APIRoute = async ({request}) => {
                 });
                 //send rejection email
                 await transporter.sendMail({
-                    from: `"POL RFX" <${process.env.MAIL_USERNAME}>`,
+                    from: `"POL eRFX" <${import.meta.env.MAIL_USERNAME}>`,
                     to: res.email,
-                    subject: "Bid Rejected",
+                    subject: import.meta.env.BID_EMAIL_SUBJECT,
                     html: BID_REJECTION_HTML(res.companyName, res.title),
                 });
                 break;

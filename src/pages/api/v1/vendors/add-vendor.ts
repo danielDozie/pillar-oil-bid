@@ -55,8 +55,8 @@ export const POST: APIRoute = async ({ request, redirect }) => {
             let info = await transporter.sendMail({
                 from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
                 to: email, // List of receivers
-                subject: "Welcome to POL RFX", // Subject line
-                text: `Welcome to POL RFX`, // Plain text body
+                subject: "Welcome to POL eRFX", // Subject line
+                text: `Welcome to POL eRFX`, // Plain text body
                 html: ADD_VENDOR_HTML(companyName, token)
             });
 

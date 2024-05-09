@@ -1,7 +1,7 @@
 import { Input } from './input'
 import { Button } from './button'
 
-export function FilesListComponent({ data }: { data: any }) {
+export function FilesListComponent({ data, bucketPublicDomain }: { data: any, bucketPublicDomain: string }) {
 
   return (
       <>
@@ -27,7 +27,7 @@ export function FilesListComponent({ data }: { data: any }) {
                                       ? (item?.size / 1024 / 1024).toFixed(2) + " MB"
                                       : (item?.size / 1024).toFixed(2) + " KB"}
                               </p>
-                                  <a href={`https://pub-89612445d44947dd8493fffbc7e59fdf.r2.dev/${item?.name}`} target="_blank">
+                                  <a href={`${bucketPublicDomain}/${item?.name}`} target="_blank">
                                       <Button variant="outline" size="sm" className='text-foreground'>
                                           View
                                       </Button>

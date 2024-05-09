@@ -8,8 +8,9 @@ import { toast } from 'sonner'
 import { useRef, useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { ReloadAfter } from '@/utilities/helpers/reload'
+import { NairaSign } from '@/utilities/helpers/nairaSign'
 
-export function ManageFxBidComponent({ data }: { data: any }) {
+export function ManageFxBidComponent({ data, token }: { data: any, token: string }) {
     const acceptRef = useRef(null)
     const rejectRef = useRef(null)
     const [loading1, setLoading1] = useState(false);
@@ -25,8 +26,10 @@ export function ManageFxBidComponent({ data }: { data: any }) {
         }
 
         const res = await fetch(`/api/v1/fx/manage-fx-bid`, {
-            method: "POST", headers: {
-            "content-type": "application/json"
+            method: "POST", 
+            headers: {
+                "content-type": "application/json",
+                "x-pol-rfx-secret": token,
             },
             body: JSON.stringify({...bidData, approval: action})
         })
@@ -155,7 +158,7 @@ export function ManageFxBidComponent({ data }: { data: any }) {
                                     </div>
                                     <div className='flex flex-col items-center justify-center'>
                                         <p>Offer Amount</p>
-                                        <h1 className='text-3xl font-semibold py-2'>{formatCurrency(bidData?.amount)}</h1>
+                                        <h1 className='text-3xl font-semibold py-2'>{NairaSign() +  formatCurrency(bidData?.amount)}</h1>
                                     </div>
                                 </div>
                             </div>

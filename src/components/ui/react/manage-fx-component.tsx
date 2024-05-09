@@ -7,7 +7,7 @@ import { Textarea } from './text-area'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
-export default function ManageFxComponent({ data }: { data: any }) {
+export default function ManageFxComponent({ data, token }: { data: any, token: string }) {
 
     const [loading, setLoading] = useState(false)
 
@@ -17,7 +17,8 @@ export default function ManageFxComponent({ data }: { data: any }) {
         const res = await fetch(`/api/v1/fx/send-fx-bids`, {
             method: "POST",
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                "x-pol-rfx-secret": token,
             },
             body: JSON.stringify(payload)
         });

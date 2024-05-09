@@ -92,7 +92,7 @@ export function FXBidsDataTable({ data }: { data: any }) {
             accessorKey: "id",
             header: "Id",
             cell: ({ row }) => (
-                <div className="capitalize">{`POL RFX-FB`+row.getValue("id")}</div>
+                <div className="capitalize">{`POL eRFX-FB`+row.getValue("id")}</div>
             ),
         },
         {

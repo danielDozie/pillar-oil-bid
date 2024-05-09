@@ -50,9 +50,9 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                 let info = await transporter.sendMail({
                     from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
                     to: email, // List of receivers
-                    subject: "Welcome to POL RFX", // Subject line
-                    text: `Welcome to POL RFX`, // Plain text body
-                    html: ONBOARDING_COMPLETE_HTML(payload?.companyName, 'Pillar Bid'), 
+                    subject: "Welcome to POL eRFX", // Subject line
+                    text: `Welcome to POL eRFX`, // Plain text body
+                    html: ONBOARDING_COMPLETE_HTML(payload?.companyName, 'POL eRFX'), 
                 });
                 if (info.messageId) {
                     return new Response(JSON.stringify({ message: "Onboarding complete!" }), { status: 200 })
@@ -105,8 +105,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                     let info = await transporter.sendMail({
                         from: `${FROM_NAME}  <${process.env.MAIL_USERNAME}>`, // Sender address
                         to: email, // List of receivers
-                        subject: "Welcome to POL RFX", // Subject line
-                        text: `Welcome to POL RFX`, // Plain text body
+                        subject: "Welcome to POL eRFX", // Subject line
+                        text: `Welcome to POL eRFX`, // Plain text body
                         html: ONBOARDING_COMPLETE_HTML(payload?.firstName, 'Pillar Fx'),
                     });
                     if (info.messageId) {

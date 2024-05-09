@@ -1,6 +1,6 @@
 ---
 import FxLayout from "../../../../../layouts/FxLayout.astro";
-import { Headers } from "@/constants";
+import { HEADER_TOKEN, Headers } from "@/constants";
 import ManageFxComponent from "@/components/ui/react/manage-fx-component";
 
 const { fx } = Astro.params;
@@ -13,5 +13,5 @@ const result = await res?.json();
 ---
 
 <FxLayout title=`Manage Fx | ${result?.fx?.title}`>
-  <ManageFxComponent data={result} client:load />
+  <ManageFxComponent token={HEADER_TOKEN} data={result} client:load />
 </FxLayout>

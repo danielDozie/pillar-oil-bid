@@ -1,18 +1,17 @@
 ---
-import { Headers } from "@/constants";
+import { HEADER_TOKEN, Headers } from "@/constants";
 import AdminLayout from "../../../../../layouts/AdminLayout.astro";
 import { ManageVendorComponent } from "@/components/ui/react/manage-vendor-component";
 
 const { vendor } = Astro.params;
 //@ts-ignore
 const vendorData = await fetch(
-  `${process.env.API_ENDPOINT}/v1/vendors/manage-vendor/?${new URLSearchParams({ vendor }).toString()}`, {headers: Headers}
+  `${process.env.API_ENDPOINT}/v1/vendors/manage-vendor/?${new URLSearchParams({ vendor }).toString()}`,
+  { headers: Headers }
 );
 const { vendor: result } = await vendorData.json();
-const token = Headers["x-pol-rfx-secret"];
-
 ---
 
 <AdminLayout title={`Vendor | ` + result?.companyName}>
-  <ManageVendorComponent result={result} token={token} client:load />
+  <ManageVendorComponent result={result} token={HEADER_TOKEN} client:load />
 </AdminLayout>

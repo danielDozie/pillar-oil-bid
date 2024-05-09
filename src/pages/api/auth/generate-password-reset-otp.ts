@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     
     // Send mail with defined transport object
     const info = await transporter.sendMail({
-        from: `"POL RFX" <${process.env.MAIL_USERNAME}>`, // Sender address
+        from: `"POL eRFX" <${process.env.MAIL_USERNAME}>`, // Sender address
         to: email, // List of receivers
         subject: "Password Reset OTP", // Subject line
         html: GENERATE_PASSWORD_RESET_OTP_HTML(otp), // HTML body with styling
@@ -39,6 +39,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
     if (info.messageId) {
         cookies.set('otp-type', 'pass-reset-otp', { path: '/' });
+        cookies.set('user', email, { path: '/' });
         return redirect('/auth/confirm-otp');
     }
 

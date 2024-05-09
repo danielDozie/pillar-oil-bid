@@ -44,7 +44,11 @@ const url = Astro.url.pathname;
               className="font-bold text-[14px] invisible group-hover:visible group-hover:hover:vicible"
             />
             <a href={link}>
-              <Icon name={icon} size={24} />
+              <Icon
+                name={icon}
+                size={24}
+                class={`${url.includes(link) ? "text-primary" : ""}`}
+              />
             </a>
           </span>
         ))

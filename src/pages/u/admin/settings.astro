@@ -1,4 +1,5 @@
 ---
+import { HEADER_TOKEN } from "@/constants";
 import AdminLayout from "../../../layouts/AdminLayout.astro";
 import SettingsComponent from "@/components/ui/react/settings-component";
 
@@ -17,13 +18,13 @@ const operatorUsers = data?.user?.filter(
 );
 
 const userData = { adminUsers, operatorUsers, users };
-
 ---
 
 <AdminLayout title="Settings">
   <SettingsComponent
     usersData={userData}
     settings={data.settings}
+    token={HEADER_TOKEN}
     client:only
   />
 </AdminLayout>

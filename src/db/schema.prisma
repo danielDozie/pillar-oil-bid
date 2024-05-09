@@ -168,7 +168,7 @@ model FxRecipients {
 
 model BidPlacement {
   id               Int      @id @default(autoincrement())
-  documentPassword String   @map("document_password")
+  documentPassword String?   @map("document_password")
   status           String   @default("placed")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

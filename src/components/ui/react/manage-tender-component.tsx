@@ -19,7 +19,7 @@ import {
 import Cookies from 'js-cookie'
 
 // Define the main component for managing tenders
-export function ManageTenderComponent({ result, token }: {result: any, token: string}) {
+export function ManageTenderComponent({ result, token, role, bucketPublicDomain }: { result: any, token: string, role: string, bucketPublicDomain : string}) {
     // State hooks for managing component state
     const [loading, setLoading] = useState(false);
     const [showOtpField, setShowOtpField] = useState(false);
@@ -142,8 +142,8 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
             <div className="flex flex-row gap-8 text-foreground">
                 <div className="w-full">
                     <h1 className="text-xl font-bold mb-4">Manage Tender</h1>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="w-3/5">
+                    <div className="flex flex-col md:flex-row space-x-4 w-full">
+                        <div className="w-full md:w-3/5">
                             <h2 className="font-semibold">General information</h2>
                             <div className="flex flex-col my-8 gap-y-4">
                                 <div className="flex justify-between gap-x-4 w-full">
@@ -205,7 +205,7 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
                                                 readOnly />
                                             
                                             {/** Dialog for end date change **/}
-                                            <Dialog open={open} onOpenChange={() => setOpen(!open)}>
+                                            {role === 'admin' && <Dialog open={open} onOpenChange={() => setOpen(!open)}>
                                                 <DialogTrigger>
                                                     <EditIcon className='cursor-pointer' onClick={() => setOpen(true)} />
                                                 </DialogTrigger>
@@ -231,17 +231,17 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
                                                                     defaultValue={result?.tender?.endDate.split('T')[0]}
                                                                     onChange={(e) => setNewEndDate(e.target.value)}
                                                                 />
-                                                                </div>
-                                                                <div className='w-1/2 mx-auto pt-2'>
-                                                                    <Button className='w-full bg-primary' disabled={loading} onClick={handleUpdate}>
+                                                            </div>
+                                                            <div className='w-1/2 mx-auto pt-2'>
+                                                                <Button className='w-full bg-primary' disabled={loading} onClick={handleUpdate}>
                                                                     {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                                                                     Update</Button>
                                                             </div>
                                                         </>}
-                                                        
+
                                                     </DialogHeader>
                                                 </DialogContent>
-                                            </Dialog>
+                                            </Dialog>}
                                         </span>
                                     </span>
                                 </div>
@@ -296,7 +296,7 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
                             </div>
 
                             <h2 className="font-semibold">Description</h2>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col pb-4">
                                 <div className="flex justify-between gap-x-4 w-full">
                                     <span className="w-full">
                                         <Textarea
@@ -313,10 +313,10 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
                             <ItemListComponent data={result?.tender?.items} /> */}
                             
                             <h2 className="font-semibold">Files</h2>
-                            <FilesListComponent data={result?.tender?.files} />
+                            <FilesListComponent bucketPublicDomain={bucketPublicDomain} data={result?.tender?.files} />
                         </div>
                         <div
-                            className="flex flex-col justify-between w-2/5 bg-white dark:bg-background-color rounded-xl p-6"
+                            className="flex flex-col justify-between w-full md:w-2/5 bg-white dark:bg-background-color rounded-xl p-6"
                         >
                             <div className="w-full h-[85]">
                                 <h2 className="font-bold pb-4">Tender Recepients</h2>
@@ -333,7 +333,7 @@ export function ManageTenderComponent({ result, token }: {result: any, token: st
                                     }
                                 </div>
                             </div>
-                            <div className="w-full flex max-h-[15] justify-end space-x-4">
+                            <div className="w-full flex max-h-[15] justify-end md:space-x-4">
                                 {/* <Button
                                     size="sm"
                                     className="flex px-12 flex-end"

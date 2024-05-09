@@ -4,7 +4,7 @@ export const menu = {
       { id: 1, name: "Dashboard", icon: "majesticons:home", link: "/u/admin" },
       { id: 2, name: "Vendors", icon: "majesticons:user", link: "/u/admin/vendors" },
       { id: 3, name: "Tenders", icon: "majesticons:analytics", link: "/u/admin/tenders" },
-      { id: 4, name: "Bids", icon: "majesticons:article", link: "/u/admin/bids" },
+      // { id: 4, name: "Bids", icon: "majesticons:article", link: "/u/admin/bids" },
       { id: 5, name: "Report", icon: "majesticons:noteblock-text", link: "/u/admin/report" },
     ],
     lower: [
@@ -20,18 +20,18 @@ export const menu = {
       { id: 5, name: "Report", icon: "majesticons:noteblock-text", link: "/u/operator/report" },
     ],
     lower: [
-      { id: 6, name: "Settings", icon: "majesticons:cog", link: "/u/operator/settings" },
+      // { id: 6, name: "Settings", icon: "majesticons:cog", link: "/u/operator/settings" },
     ]
   },
   user: {
     upper: [
       { id: 1, name: "Dashboard", icon: "majesticons:home", link: "/u/user" },
-      { id: 2, name: "Bids", icon: "majesticons:analytics", link: "/u/user/bids" },
-      { id: 3, name: "Report", icon: "majesticons:noteblock-text", link: "/u/user/report" },
+      { id: 2, name: "Tenders", icon: "majesticons:analytics", link: "/u/user/tenders" },
+      // { id: 3, name: "Report", icon: "majesticons:noteblock-text", link: "/u/user/report" },
     ],
     lower: [
       // { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/user/settings" },
-      { id: 5, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
+      // { id: 5, name: "Logout", icon: "majesticons:logout", link: "/api/auth/logout" },
     ]
   },
   fx: {
@@ -39,10 +39,10 @@ export const menu = {
       { id: 1, name: "Dashboard", icon: "majesticons:home", link: "/u/fx" },
       { id: 2, name: "Fx", icon: "majesticons:analytics", link: "/u/fx/fx" },
       { id: 3, name: "Bids", icon: "majesticons:article", link: "/u/fx/bids" },
-      { id: 4, name: "Report", icon: "majesticons:noteblock-text", link: "/u/fx/report" },
+      // { id: 4, name: "Report", icon: "majesticons:noteblock-text", link: "/u/fx/report" },
     ],
     lower: [
-      { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/fx/settings" },
+      // { id: 4, name: "Settings", icon: "majesticons:cog", link: "/u/fx/settings" },
     ]
   },
   fxUser: {

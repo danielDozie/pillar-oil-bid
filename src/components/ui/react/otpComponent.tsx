@@ -21,10 +21,16 @@ const OtpComponent = ({ otpValue, otpType }: { otpValue: number, otpType?: strin
         switch (otpType) {
             case "pass-reset-otp":
                 if (otp === otpValue) {
-                    document.cookie.split(";").forEach(function (c) {
-                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-                    });
-                    window.location.href = '/auth/login';
+                    Cookies.set('otp-verified', 'true', { path: '/' });
+                    Cookies.remove("otp-type", { path: '/' });
+                    setLoading(false);
+                    toast.success("OTP Verified")
+                    setTimeout(() => {
+                        window.location.replace('/auth/reset-password ');
+                    }, 1500);
+                } else {
+                    setLoading(false);
+                    toast.error("OTP Verification failed")
                 }
                 break;
             

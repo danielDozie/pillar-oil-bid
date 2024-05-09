@@ -1,6 +1,6 @@
 ---
 import { ManageBidPlacementComponent } from "@/components/ui/react/manage-bid-placement-component";
-import { Headers } from "@/constants";
+import { HEADER_TOKEN, Headers } from "@/constants";
 import { decryptDocumentPassword } from "@/utilities/helpers/verifyUser";
 import OperatorLayout from "@/layouts/OperatorLayout.astro";
 
@@ -10,12 +10,11 @@ const res = await fetch(
   `${process.env.API_ENDPOINT}/v1/bids/manage-bid-placement/?${new URLSearchParams({ bid }).toString()}`,
   { headers: Headers }
 );
-const token = Headers["x-pol-rfx-secret"];
+
 const data = await res.json();
 
 const password = data?.bid?.documentPassword;
 const docPassword = decryptDocumentPassword(password);
-
 ---
 
 <OperatorLayout title={`Bid | ${data?.bid?.contractor?.companyName}`}>
@@ -23,6 +22,6 @@ const docPassword = decryptDocumentPassword(password);
     documentPassword={docPassword ? docPassword : password}
     client:load
     result={data?.bid}
-    token={token}
+    token={HEADER_TOKEN}
   />
 </OperatorLayout>

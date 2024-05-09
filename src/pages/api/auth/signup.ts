@@ -65,5 +65,5 @@ export const POST: APIRoute = async ({ request, redirect, cookies }) => {
     }
 
     // Redirect to the root path after successful signup or error
-    return redirect('/');
+   // return redirect('/');
 };

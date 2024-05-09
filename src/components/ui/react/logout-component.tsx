@@ -15,7 +15,7 @@ export default function LogoutComponent() {
               <DialogHeader>
                   <DialogTitle className="text-center">Are you sure?</DialogTitle>
                   <DialogDescription className="text-center">
-                      You are signing out of POL RFX
+                      You are signing out of POL eRFX
                   </DialogDescription>
                   <div className="w-1/2 mx-auto pt-2">
                       <Button

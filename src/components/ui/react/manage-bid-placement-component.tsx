@@ -51,12 +51,12 @@ export function ManageBidPlacementComponent({ result, documentPassword, token }:
 
     return (
         <div
-            className="flex flex-col bg-slate-100 dark:bg-natural gap-x-4 ml-24 w-[calc(100%-7rem)] p-8 mt-24 mb-8 h-full rounded-2xl">
+            className="flex flex-col bg-slate-100 dark:bg-natural gap-x-4 ml-24 w-[calc(100%-7rem)] p-4 md:p-8 mt-24 mb-8 h-full rounded-2xl">
             <div className="flex flex-row gap-8 text-foreground">
                 <div className="w-full">
                     <h1 className="text-xl font-bold mb-4">Manage Bid</h1>
-                    <div className="flex flex-row space-x-4 w-full">
-                        <div className="w-3/5">
+                    <div className="flex flex-col md:flex-row md:space-x-4 w-full">
+                        <div className="md:w-3/5">
                             <h2 className="font-semibold">General information</h2>
                             <div className="flex flex-col my-8 gap-y-4">
                                 <div className="flex justify-between gap-x-4 w-full">
@@ -180,11 +180,11 @@ export function ManageBidPlacementComponent({ result, documentPassword, token }:
 
                             <h2 className="font-semibold">Bid Document(s)</h2>
                             <FilesListComponent data={result?.files} />
-                            <label className="font-semibold">Encryption Password</label>
-                            <Input className="font-semibold" type='text' placeholder='Documents password' value={documentPassword} readOnly/>
+                            {/* <label className="font-semibold">Encryption Password</label>
+                            <Input className="font-semibold" type='text' placeholder='Documents password' value={documentPassword} readOnly/> */}
                         </div>
                         <div
-                            className="flex flex-col justify-between w-2/5 bg-white dark:bg-background-color rounded-xl p-6"
+                            className="flex flex-col justify-between w-full md:w-2/5 bg-white dark:bg-background-color rounded-xl p-6 mt-4 md:mt-0"
                         >
                             <div className="w-full">
                                 <h2 className="font-bold pb-4">Bid Action</h2>
