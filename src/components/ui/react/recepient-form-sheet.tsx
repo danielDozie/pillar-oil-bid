@@ -7,7 +7,7 @@ import Select from "react-dropdown-select";
 import { toast } from 'sonner';
 
 
-export function RecepientFormSheet() {
+export function RecepientFormSheet({token}: {token: string}) {
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -19,7 +19,13 @@ export function RecepientFormSheet() {
 
     useEffect(() => {
         (async () => {
-            const res = await fetch('/api/v1/vendors');
+            const res = await fetch('/api/v1/vendors', {
+                    headers: {
+                    "content-type": "application/json",
+                    "x-pol-rfx-secret": token,
+                },
+              }
+            );
             const vendorList = await res.json();
 
             setVendor(vendorList)

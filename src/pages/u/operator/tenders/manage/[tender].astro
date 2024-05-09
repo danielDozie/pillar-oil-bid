@@ -2,15 +2,17 @@
 import OperatorLayout from "../../../../../layouts/OperatorLayout.astro";
 import { prisma } from "@/utilities/helpers/prismaInstace";
 import { ManageTenderComponent } from "@/components/ui/react/manage-tender-component";
-import { Headers } from "@/constants";
+import { HEADER_TOKEN, Headers } from "@/constants";
 
 const { tender } = Astro.params;
 //@ts-ignore
+const role = Astro.locals?.user?.user?.role;
+
 const res = await fetch(
-  `${process.env.API_ENDPOINT}/v1/tenders/manage-tender/?${new URLSearchParams({ tender }).toString()}`, {headers: Headers}
+  `${process.env.API_ENDPOINT}/v1/tenders/manage-tender/?${new URLSearchParams({ tender }).toString()}`,
+  { headers: Headers }
 );
 const data = await res.json();
-const token = Headers["x-pol-rfx-secret"];
 
 const listRecipients = async () => {
   const recipients = await Promise.all(
@@ -26,8 +28,16 @@ const listRecipients = async () => {
 
 const receivers = await listRecipients();
 const result = Object.assign({ ...data, recipientsWithDetails: receivers });
+
+const bucketPublicDomain = import.meta.env.BUCKET_PUBLIC_DOMAIN;
 ---
 
 <OperatorLayout title={`Tender | ${result?.tender?.title}`}>
-  <ManageTenderComponent token={token} client:load result={result} />
+  <ManageTenderComponent
+    token={HEADER_TOKEN}
+    client:load
+    result={result}
+    role={role}
+    bucketPublicDomain={bucketPublicDomain}
+  />
 </OperatorLayout>

@@ -1,7 +1,6 @@
 import * as React from "react"
 import {
     CaretSortIcon,
-    ChevronDownIcon,
     DotsHorizontalIcon,
 } from "@radix-ui/react-icons"
 import {
@@ -21,7 +20,6 @@ import { Button } from "@/components/ui/react/button"
 import { Checkbox } from "@/components/ui/react/checkbox"
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
@@ -38,9 +36,7 @@ import {
     TableRow,
 } from "@/components/ui/react/table"
 import { Badge } from "./badge"
-import { useState } from "react"
-import { toast } from "sonner"
-import { formatDate, formatTime } from "@/utilities/helpers/time-formatter"
+import { formatTime } from "@/utilities/helpers/time-formatter"
 
 
 export type BidPlacement = {
@@ -49,13 +45,12 @@ export type BidPlacement = {
         companyName: string
     }
     tender: {
-        title: string
+        title: string;
+        endDate: Date;
     }
     status: "placed" | "accepted" | "rejected";
     createdAt: Date;
 };
-
-//export 
 
 export function BidPlacementDataTable({ data, role }: { data: any, role: string }) {
 
@@ -90,7 +85,7 @@ export function BidPlacementDataTable({ data, role }: { data: any, role: string 
             ),
         },
         {
-            accessorKey: "vendor.contractor.businessName",
+            accessorKey: "contractor.companyName",
             header: "Vendor",
             cell: ({ row }) => (
                 <div className="capitalize text-clip">{row?.original?.contractor?.companyName}</div>
@@ -110,6 +105,13 @@ export function BidPlacementDataTable({ data, role }: { data: any, role: string 
                 <div className="capitalize">{formatTime(row.getValue("createdAt"))}</div>
             ),
         },
+        // {
+        //     accessorKey: "endDate",
+        //     header: "End Date",
+        //     cell: ({ row }) => (
+        //         <div className="capitalize">{formatTime(row?.original?.tender?.endDate)}</div>
+        //     ),
+        // },
         {
             accessorFn: (row) => row.status,
             accessorKey: "status",
@@ -144,7 +146,11 @@ export function BidPlacementDataTable({ data, role }: { data: any, role: string 
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <a href={`/u/${role}/bids/manage/${Number(row.original.id)}`}>Manage Bid</a>
+                                <a href={`/u/${role}/bids/manage/${Number(row.original.id)}`}
+                                    className={new Date(row?.original?.tender?.endDate).getTime() > new Date().getTime() ? "pointer-events-none opacity-50" : ""}
+                                >
+                                    Manage Bid
+                                </a>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -182,14 +188,25 @@ export function BidPlacementDataTable({ data, role }: { data: any, role: string 
         },
     })
 
+
+
     return (
         <div className="w-full">
-            <div className="flex items-center py-4">
+            <div className="flex items-center py-4 gap-2">
                 <Input
                     placeholder="Filter vendor..."
-                    value={(table.getColumn("contractor.companyName")?.getFilterValue() as string) ?? ""}
+                    
+                    value={(table.getColumn('contractor_companyName')?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("contractor.companyName")?.setFilterValue(event.target.value)
+                        table.getColumn("contractor_companyName")?.setFilterValue(event.target.value)
+                    }
+                    className="max-w-sm bg-white dark:bg-background-color"
+                />
+                <Input
+                    placeholder="Filter tender..."
+                    value={(table.getColumn("tender_title")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn("tender_title")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm bg-white dark:bg-background-color"
                 />

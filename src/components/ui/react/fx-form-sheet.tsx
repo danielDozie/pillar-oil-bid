@@ -123,7 +123,7 @@ export function FxFormSheet({token}:{token: string}) {
                 </div>
                 <SheetFooter className="pt-8 flex flex-col">
                     <div className='w-full flex justify-end gap-x-4'>
-                        <FXRecepientFormSheet />
+                        <FXRecepientFormSheet token={token} />
                         <Button disabled={loading} size="sm" className='bg-primary px-6' onClick={addFx}>
                             {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                             Add Fx

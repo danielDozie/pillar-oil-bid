@@ -11,7 +11,7 @@ type UserData = {
     email: string;
 }
 
-export default function SettingsComponent({ usersData, settings }: { usersData: { adminUsers: UserData[], operatorUsers: UserData[], users: UserData[] }, settings: any[] }) {
+export default function SettingsComponent({ usersData, settings, token }: { usersData: { adminUsers: UserData[], operatorUsers: UserData[], users: UserData[] }, settings: any[], token: string }) {
 
     const [selected, setSelected] = useState<UserData[]>([]);
     const [imagePreviewUrl, setImagePreviewUrl] = useState('');
@@ -52,7 +52,8 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
         const res = await fetch('/api/v1/settings', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                "content-type": "application/json",
+                "x-pol-rfx-secret": token,
             },
             body: JSON.stringify({ payload, role: selectedRole, user: selected[0], appLogo: imagePreviewUrl }),
         });
@@ -70,22 +71,22 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
   return (
       <>
           <div
-              className="flex flex-col gap-x-4 ml-24 w-[calc(100%-7rem)] p-8 mt-24 mb-8 h-full rounded-2xl"
+              className="flex flex-col gap-x-4 ml-24 w-[calc(100%-7rem)] p-4 md:p-8 mt-24 mb-8 h-full rounded-2xl"
           >
               <h1 className="text-xl font-bold mb-4 text-foreground">Settings</h1>
               <div className="flex flex-col my-8 gap-y-4 ">
-                  <div className="flex justify-between gap-x-4 w-full">
-                      <span className="w-1/2">
-                          <h1 className="text-2xl font-bold mb-4 text-foreground">POL RFX</h1>
-                          <label htmlFor="smtp" className="block text- font-medium text-gray-600 dark:text-gray-400"
+                  <div className="flex flex-col md:flex-row justify-between gap-x-4 w-full">
+                      <span className="md:w-1/2">
+                          <h1 className="text-2xl font-bold mb-4 text-foreground">POL eRFX</h1>
+                          <label className="block text- font-medium text-gray-600 dark:text-gray-400"
                           >4 Justice Rose Ukeje St, Lekki Phase I, Lekki 106104, Lagos</label
                           >
                       </span>
-                      <span className="w-1/2 relative">
+                      <span className="md:w-1/2 mt-12 md:mt-0 relative">
                           <h1 className="text-[16px] font-bold mb-4 text-foreground">
                               APP Settings
                           </h1>
-                          <label htmlFor="app-name" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
+                          <label htmlFor="appName" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
                           >App Name
                           </label>
                           <Input
@@ -94,7 +95,7 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                               defaultValue={payload?.appName}
                               onChange={handlePayloadChange}
                           />
-                          <label htmlFor="app-url" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
+                          <label htmlFor="appUrl" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
                           >App Url</label>
                           <Input
                               name='appUrl'
@@ -103,7 +104,6 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                               onChange={handlePayloadChange}
                           />
                           <label
-                              htmlFor="app-logo"
                               className="block text-sm font-medium text-gray-600 dark:text-gray-400 text-foreground"
                           >App Logo</label>
                           <Input
@@ -114,8 +114,8 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                           />
                           <img
                               src={imagePreviewUrl || payload?.appLogo}
-                              width="80px"
-                              height="80px"
+                              width="60px"
+                              height="60px"
                               alt="app-logo"
                               id="image-preview"
                               className="absolute top-1 right-5"
@@ -123,8 +123,8 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                       </span>
                   </div>
                   <hr />
-                  <div className="flex justify-between gap-x-4 w-full mt-8">
-                      <span className="w-1/2">
+                  <div className="flex flex-col md:flex-row justify-between gap-x-4 w-full mt-8">
+                      <span className="md:w-1/2">
                           <h1 className="text-[16px] font-bold mb-4 text-foreground">
                               System Administrators
                           </h1>
@@ -157,7 +157,7 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                           <p className="mt-4 font-medium text-foreground">New Administrator?</p>
                           <span className='text-xs font-regular text-foreground my-2'>Make new admin</span>
                           <div className="flex w-full justify-between">
-                              <div className='w-3/4'>
+                              <div className='w-full md:w-3/4'>
                                   <Select
                                       options={usersData?.users}
                                       values={selected}
@@ -199,11 +199,11 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                               </div> 
                           )}
                       </span>
-                      <span className="w-1/2">
-                          <h1 className="text-[16px] font-bold mb-4 text-foreground">
+                      <span className="md:w-1/2">
+                          <h1 className="text-[16px] font-bold my-4 md:mb-4 text-foreground">
                               SMTP Settings
                           </h1>
-                          <label htmlFor="smtp" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
+                          <label htmlFor="smtpHost" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
                           >SMTP Host</label
                           >
                           <Input
@@ -212,7 +212,7 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                               defaultValue={payload?.smtpHost}
                               onChange={handlePayloadChange}
                           />
-                          <label htmlFor="smtp" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
+                          <label htmlFor="smtpUser" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
                           >SMTP Username</label
                           >
                           <Input
@@ -221,7 +221,7 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                               defaultValue={payload?.smtpUser}
                               onChange={handlePayloadChange}
                           />
-                          <label htmlFor="smtp" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
+                          <label htmlFor="smtpPort" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
                           >SMTP Port</label
                           >
                           <Input
@@ -230,7 +230,7 @@ export default function SettingsComponent({ usersData, settings }: { usersData: 
                               defaultValue={payload?.smtpPort}
                               onChange={handlePayloadChange}
                           />
-                          <label htmlFor="smtp" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
+                          <label htmlFor="smtpPassword" className="block text-sm font-medium text-gray-600 dark:text-gray-400"
                           >SMTP Password</label
                           >
                           <Input

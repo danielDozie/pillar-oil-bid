@@ -17,7 +17,7 @@ export default function SignupForm() {
             const data = await fetch('/api/auth/signup', {
                 method: "POST",
                 body: JSON.stringify({
-                    email,
+                    email: email.toLowerCase(),
                     password
                 })
             });
@@ -41,6 +41,9 @@ export default function SignupForm() {
         <form
             className="flex flex-col h-full justify-center self-center items-center align-middle"
         >
+            <h1 className="font-bold md:hidden flex justify-center my-12 text-3xl">
+                POL eRFX.
+            </h1>
             <div
                 className="flex flex-col w-full justify-center self-center items-center align-middle"
             >
@@ -50,13 +53,13 @@ export default function SignupForm() {
                     type="email"
                     placeholder="Email"
                     name="email"
-                    className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-2/3 my-4"
+                    className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:w-2/3 my-4"
                 />
                 <Input
                     type="password"
                     name="password"
                     placeholder="Password"
-                    className="flex h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-2/3 mb-4"
+                    className="flex h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:w-2/3 mb-4"
                 />
 
                 <Button disabled={loading} type='submit' className="w-2/3 bg-primary" onClick={handleSignup}>

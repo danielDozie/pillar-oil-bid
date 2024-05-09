@@ -2,7 +2,7 @@
 import {
   ADMIN_OTP_EMAIL,
   APPROVE_SIGN_IN_HTML,
-FROM_NAME,
+  FROM_NAME,
 } from "@/constants/notifications/email";
 import { transporter } from "@/utilities/helpers/emailTransporter";
 //@ts-ignore
@@ -15,29 +15,44 @@ const otpVerified = Boolean(Astro.cookies.get("otp-verified")?.value);
 if (role) {
   //add a flag to detect otp confirmation
   if (!otpVerified) {
-    if (isLoggedIn && role === "operator") {
-      //send otp to admin
-      const otp = Math.floor(1000 + Math.random() * 9000); // Generate 4 digit OTP
-
-      // Send mail with defined transport object
-      let info = await transporter.sendMail({
-        from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
-        to: ADMIN_OTP_EMAIL, // admin email addresses receivers
-        subject: "Approve Sign-in", // Subject line
-        text: `Your Sign-in OTP is ${otp}`, // Plain text body
-        html: APPROVE_SIGN_IN_HTML(otp), // HTML body content
-      });
-
+    //redirect to otp page if role is either operator or fx
+    const otp = Math.floor(1000 + Math.random() * 9000); // Generate 4 digit OTP
+    if (isLoggedIn) {
+      switch (role) {
+        //send otp to bid admin if operator
+        case "operator":
+          // Send mail with defined transport object
+          await transporter.sendMail({
+            from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
+            to: ADMIN_OTP_EMAIL, // admin email addresses receivers
+            subject: "Approve Sign-in", // Subject line
+            text: `Your Sign-in OTP is ${otp}`, // Plain text body
+            html: APPROVE_SIGN_IN_HTML(otp), // HTML body content
+          });
+          break;
+        //send otp to fx admin if fx
+        case "fx":
+          // Send mail with defined transport object
+          await transporter.sendMail({
+            from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
+            to: ADMIN_OTP_EMAIL, // admin email addresses receivers
+            subject: "Approve Sign-in", // Subject line
+            text: `Your Sign-in OTP is ${otp}`, // Plain text body
+            html: APPROVE_SIGN_IN_HTML(otp), // HTML body content
+          });
+          break;
+        default:
+          //default should return the role where the user is redirected
+          return Astro.redirect(`/u/${role}`, 302);
+          break;
+      }
       Astro.cookies.set("otp-type", "approve-sign-in");
-      // Save OTP in cookies with a TTL of 15 minutes
       Astro.cookies.set("otp", JSON.stringify(otp), {
         path: "/",
         maxAge: 60 * 15,
         httpOnly: true,
       });
-      if (info?.messageId) {
-        return Astro.redirect(`/auth/confirm-otp`, 302);
-      }
+      return Astro.redirect(`/auth/confirm-otp`, 302);
     }
   }
   return Astro.redirect(`/u/${role}`, 302);
@@ -45,5 +60,5 @@ if (role) {
 
 if (!isLoggedIn || !role) {
   return Astro.redirect("/auth/login", 302);
-}
+};
 ---

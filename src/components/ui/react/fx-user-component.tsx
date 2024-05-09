@@ -9,7 +9,7 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { ReloadAfter } from "@/utilities/helpers/reload";
 import { formatCurrency } from "@/utilities/helpers/formatCurrency";
 
-export default function FxUserComponent({ data }: { data: any[] }) {
+export default function FxUserComponent({ data, token }: { data: any[], token: string }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [fxData, setFxData] = useState<any>();
   const [fxAmount, setFxAmount] = useState();
@@ -30,7 +30,7 @@ export default function FxUserComponent({ data }: { data: any[] }) {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        // "x-pol-rfx-secret": "application/json",
+        "x-pol-rfx-secret": token,
       },
       body: JSON.stringify(payload),
     });
@@ -38,7 +38,7 @@ export default function FxUserComponent({ data }: { data: any[] }) {
 
     if (res.status === 200) {
       toast.success(responseMessage.message);
-      setLoading(false);
+      setLoading(false); 
       ReloadAfter(1500); //1.5 seconds
     } else {
       toast.error(responseMessage.message);
@@ -65,7 +65,7 @@ export default function FxUserComponent({ data }: { data: any[] }) {
                     key={item?.id}
                     onClick={() => setSelectedId(item?.id)}
                   >
-                    <h2 className="text-lg font-semibold mb-4 pt-2">
+                    <h2 className="text-lg text-primary font-semibold mb-4 pt-2">
                       {item?.fx?.title}
                     </h2>
                     <li className="flex flex-row justify-between py-4 capitalize">
@@ -99,7 +99,7 @@ export default function FxUserComponent({ data }: { data: any[] }) {
           </div>
           <div className="w-[40%] h-full fixed right-5">
             <div className="flex flex-col bg-gray-100 dark:bg-natural w-full min-h-52 p-8 rounded-lg text-foreground">
-              <h1 className="text-xl font-bold">{fxData?.fx?.title}</h1>
+              <h1 className="text-xl font-bold text-primary">{fxData?.fx?.title}</h1>
               {!fxData ? (
                 <div className="flex flex-col items-center justify-center space-y-2">
                   <h1>There's nothing here</h1>

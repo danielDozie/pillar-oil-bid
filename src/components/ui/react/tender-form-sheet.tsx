@@ -10,7 +10,7 @@ import { FileUploader } from './uploader';
 import { ReloadAfter } from '@/utilities/helpers/reload';
 
 
-export function TenderFormSheet({token}: {token: string}) {
+export function TenderFormSheet({token, bucketName}: {token: string, bucketName: string}) {
 
     const [open, setOpen] = useState(false);
     // const [items, setItems] = useState([{ name: '', quantity: '', unit: '' }]);
@@ -167,7 +167,7 @@ export function TenderFormSheet({token}: {token: string}) {
                         <div className='flex justify-between my-2'>
                             <label className="text-xs text-muted-foreground font-semibold" htmlFor="items">Supporting documents</label>
                         </div>
-                        <FileUploader />
+                        <FileUploader bucketName={bucketName} />
                     </div>
 
 
@@ -179,8 +179,7 @@ export function TenderFormSheet({token}: {token: string}) {
                 <SheetFooter className="pt-8 flex flex-col">
                     <div className='w-full flex justify-end gap-x-4'>
                         {/* <p className='flex-start justify-start text-sm font-medium text-foreground mt-1'>{tenderStore.getState().$recipients.length} Recipients selected</p> */}
-                        <RecepientFormSheet />
-
+                        <RecepientFormSheet token={token} /> 
                         <Button size="sm" disabled={loading} onClick={addTender} className='bg-primary'>
                             {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                             Add tender

@@ -6,7 +6,7 @@ import Select from "react-dropdown-select";
 import { toast } from 'sonner';
 
 
-export function FXRecepientFormSheet() {
+export function FXRecepientFormSheet({token}: {token:string}) {
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -18,8 +18,15 @@ export function FXRecepientFormSheet() {
 
     useEffect(() => {
         (async () => {
-            const res = await fetch('/api/v1/fx/fx-bidders');
+            const res = await fetch('/api/v1/fx/fx-bidders', {
+                headers: {
+                    "x-pol-rfx-secret": token,
+                    "Content-Type": "application/json"
+                }
+            });
             const fxbiddersList = await res.json();
+            //const filteredFxbiddersList = fxbiddersList.filter(bidder => bidder.role === 'fx-user');
+            console.log(fxbiddersList);
             const modifiedFxBiddersList = fxbiddersList.map(bidder => ({
                 ...bidder,
                 fullName: `${bidder.firstName} ${bidder.lastName ?? ""}` 

@@ -9,26 +9,39 @@ const PUBLIC_ROUTE = [
     "/auth/confirm-otp",
     "/auth/congratulations",
 ];
+
 const PROTECTED_ROUTE = [
+    //bids
     "/api/v1/bids",
-    "/api/v1/bids/check-bid-status",
     "/api/v1/bids/manage-bid",
     "/api/v1/bids/bid-placement",
     "/api/v1/bids/manage-bid-placement",
+    //Fx
     "/api/v1/fx",
     "/api/v1/fx/add-new-fx",
+    "/api/v1/fx/fetch-fx-bid-placement",
     "/api/v1/fx/fetch-fx",
     "/api/v1/fx/fx-bidders",
+    "/api/v1/fx/manage-fx-bids",
     "/api/v1/fx/manage-fx",
     "/api/v1/fx/send-fx-bids",
+    "/api/v1/fx/send-fx-user-bid",
+    //Settings
+    "/api/v1/settings",
+    //Tenders
     "/api/v1/tenders",
     "/api/v1/tenders/add-tender",
-    "/api/v1/tenders/send-tender",
+    "/api/v1/tenders/extend-end-date",
     "/api/v1/tenders/manage-tender",
+    "/api/v1/tenders/send-tender",
+    "/api/v1/tenders/verify-otp",
+    //Vendors
     "/api/v1/vendors",
     "/api/v1/vendors/add-vendor",
     "/api/v1/vendors/manage-vendor",
-    "/api/uploads/tender-files"
+    //Cron
+    "/api/v1/cron/check-fx-status",
+    "/api/v1/cron/check-tender-status",
 ];
 
 const Headers = {
@@ -36,11 +49,14 @@ const Headers = {
     "Content-Type": "application/json",
 };
 
-const DOCUMENTS_URL = `https://pub-89612445d44947dd8493fffbc7e59fdf.r2.dev`;
+const HEADER_TOKEN = Headers["x-pol-rfx-secret"];
+
+const DOCUMENTS_URL = process.env.BUCKET_PUBLIC_DOMAIN;
 
 export {
     PROTECTED_ROUTE,
     PUBLIC_ROUTE,
     Headers,
-    DOCUMENTS_URL
+    DOCUMENTS_URL,
+    HEADER_TOKEN
 }

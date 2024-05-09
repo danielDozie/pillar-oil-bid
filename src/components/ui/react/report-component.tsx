@@ -29,7 +29,7 @@ export default function ReportComponent({ report }: { report: any }) {
   return (
       <div className='flex flex-col w-[calc(100%-7rem)] ml-24'>
           <div
-              className="flex flex-col gap-x-4 p-8 mt-24 h-full rounded-2xl"
+              className="flex flex-col gap-x-4 md:p-8 mt-24 h-full rounded-2xl"
           >
               <div>
                   <h1 className="font-semibold text-2xl text-foreground my-8">
@@ -37,8 +37,8 @@ export default function ReportComponent({ report }: { report: any }) {
                   </h1>
               </div>
 
-              <div className="flex gap-x-6">
-                  <div className="w-1/4 bg-slate-100 dark:bg-natural rounded-lg p-4 shadow-md">
+              <div className="grid grid-rows-2 gap-y-4 md:flex md:gap-x-6">
+                  <div className="w-full md:w-1/4 bg-slate-100 dark:bg-natural rounded-lg p-4 shadow-md">
                       <h2 className="font-semibold text-foreground text-lg mb-2">
                           Total Vendors
                       </h2>
@@ -54,7 +54,7 @@ export default function ReportComponent({ report }: { report: any }) {
                       </span>
                   </div>
                   <div
-                      className="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+                      className="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
                   >
                       <h2 className="font-semibold text-lg mb-2">Total Bids</h2>
                       <span className="flex justify-between">
@@ -69,7 +69,7 @@ export default function ReportComponent({ report }: { report: any }) {
                       </span>
                   </div>
                   <div
-                      className="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+                      className="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
                   >
                       <h2 className="font-semibold text-lg mb-2">Total Tenders</h2>
                       <span className="flex justify-between">
@@ -84,7 +84,7 @@ export default function ReportComponent({ report }: { report: any }) {
                       </span>
                   </div>
                   <div
-                      className="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+                      className="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
                   >
                       <h2 className="font-semibold text-lg mb-2">Export Reports</h2>
                       <span className="flex justify-between">
@@ -99,7 +99,7 @@ export default function ReportComponent({ report }: { report: any }) {
               </div>
           </div>
           {showCSV && (
-              <div className="h-40 flex justify-end space-x-4 rounded-2xl -mt-12 p-8 text-foreground">
+              <div className="md:h-40 flex justify-end gap-2 md:space-x-4 rounded-2xl md:-mt-12 p-4 md:p-8 text-foreground">
                   <span className='flex flex-col items-center border p-2 rounded-lg cursor-pointer' onClick={()=> downloadReport({type: 'csv', filename: 'vendors', object: report?.vendors})}>
                       <h1>Vendors.csv</h1>
                       <DownloadIcon />
@@ -116,7 +116,7 @@ export default function ReportComponent({ report }: { report: any }) {
           )}
 
           {showPDF && (
-              <div className="h-40 flex justify-end space-x-4 rounded-2xl -mt-12 p-8 text-foreground">
+              <div className="md:h-40 flex justify-end gap-2 md:space-x-4 rounded-2xl md:-mt-12 p-4 md:p-8 text-foreground">
                   <span className='flex flex-col items-center border p-2 rounded-lg cursor-pointer' onClick={() => downloadReport({ type: 'pdf', filename: 'vendors', object: report?.vendors })}>
                       <h1>Vendors.pdf</h1>
                       <DownloadIcon />

@@ -4,42 +4,44 @@ import { useEffect, useState } from 'react';
 import { removeItemByName, uploadItem } from '@/utilities/helpers/s3config';
 
 
-export const UserFileUploader = ({status}: {status: string}) => {
+export const UserFileUploader = ({status, bucketName}: {status: string, bucketName: string}) => {
     const [alert, setAlert] = useState('');
     const [loading, setLoading] = useState(false)
+    const [localData, setLocalData] = useState([])
+
     useEffect(() => {
         setTimeout(() => {
             setAlert('');
         }, 2500)
     }, [alert]);
-    let data = [];
+
     // called every time a file's `status` changes
     const handleChangeStatus = ({ meta, file }: any, status: string, files: any[]) => {
+        setLoading(true);
         const isDone = files.filter((file) => file.meta.status === 'done').length === files.length;
-
         if (isDone) {
-            setLoading(true);
             (async () => {
-                const { uploadUrl } = await uploadItem({ bucketName: "active-private-pol-ref-directory", itemName: meta.name });
-                const response = await fetch(uploadUrl, {
-                    method: 'PUT',
-                    body: file,
-                    headers: {
-                        'Content-Type': file.type.includes('pdf') ? 'application/pdf' : file.type.includes('doc') || file.type.includes('docx') ? 'application/msword' : 'image/*',
-                    },
+                const uploadUrls = await Promise.all(files.map(file => uploadItem({ bucketName, itemName: file.meta.name })));
+                const responses = await Promise.all(uploadUrls.map((uploadUrl, index) => {
+                    return fetch(uploadUrl.uploadUrl, {
+                        method: 'PUT',
+                        body: files[index]?.file,
+                        headers: {
+                            'Content-Type': files[index]?.meta?.type?.includes('pdf') ? 'application/pdf' : files[index]?.meta?.type?.includes('doc') || files[index]?.meta?.type?.includes('docx') ? 'application/msword' : 'image/*',
+                        },
+                    });
+                }));
+                responses.forEach(response => {
+                    if (response.ok) {
+                        setAlert('Upload successful');
+                    } else {
+                        setAlert('Upload failed');
+                        console.error('Upload failed', response);
+                    }
                 });
-                console.log()
-
-                if (response.ok) {
-                    setAlert('Upload successful')
-                    setLoading(false)
-                } else {
-                    setAlert('Upload failed')
-                    console.error('Upload failed');
-                    setLoading(false)
-                }
+                setLoading(false);
             })();
-            
+
             files.forEach((file) => {
                 const fileData = {
                     name: file.meta.name,
@@ -47,19 +49,20 @@ export const UserFileUploader = ({status}: {status: string}) => {
                     path: file.meta.name.replace(/[_\s]/g, '_').toLowerCase()
                 };
 
-                if (!data.some(item => item.name === fileData.name && item.size === fileData.size && item.path === fileData.path)) {
-                    data.push(fileData);
-                }
+                setLocalData(prevData => {
+                    if (!prevData.some(item => item.name === fileData.name && item.size === fileData.size && item.path === fileData.path)) {
+                        return [...prevData, fileData];
+                    }
+                    return prevData;
+                });
             });
-            window.localStorage.setItem("@user-files", JSON.stringify(data));
         };
+
 
         switch (status) {
             case 'removed':
-                setLoading(true);
                 (async () => {
-                    const { deleteUrl } = await removeItemByName({ bucketName: "active-private-pol-ref-directory", itemName: meta.name });
-
+                    const { deleteUrl } = await removeItemByName({ bucketName, itemName: meta.name });
                     const response = await fetch(deleteUrl, {
                         method: 'DELETE',
                         body: file,
@@ -67,22 +70,27 @@ export const UserFileUploader = ({status}: {status: string}) => {
                             'Content-Type': file.type.includes('pdf') ? 'application/pdf' : file.type.includes('doc') || file.type.includes('docx') ? 'application/msword' : 'image/*',
                         },
                     });
-                    setLoading(false)
 
                     if (response.ok) {
-                        setAlert('File deleted!')
-                    } else {
-                        setAlert('Delete failed')
                         setLoading(false)
+                        setAlert('File deleted!');
+                    } else {
+                        setLoading(false)
+                        setAlert('Delete failed');
                     }
                 })();
-                data = data.filter(item => item.name !== meta.name);
-                window.localStorage.setItem("@user-files", JSON.stringify(data));
+                setLocalData(prevData => prevData.filter(item => item.name !== meta.name));
                 break;
             default:
                 break;
         }
     }
+
+    useEffect(() => {
+        window.localStorage.setItem("@user-files", JSON.stringify(localData));
+    }, [localData?.length]);
+
+
     return (
         <>
             <Dropzone

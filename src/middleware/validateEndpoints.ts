@@ -15,7 +15,8 @@ export const validateEndpoints = defineMiddleware(async ({ request, redirect}, n
             }
         }
     } catch (error) {
-        const message = error.message === "Forbidden" ? "Forbidden" : "Access to this resource is forbidden without proper authorization.";
+        const message = error.message === "Forbidden" ? "Forbidden" : 
+        "Access to this resource is forbidden without proper authorization";
         const status = error.message === "Forbidden" ? 403 : 401;
         return new Response(JSON.stringify(message), {
             status,

@@ -1066,7 +1066,7 @@ export const POST: APIRoute = async ({request}) => {
                     email: EmailAddress,
                     password,
                     verified: true,
-                    role: "user", //change to fx for Fxuser
+                    role: "user", //change to fx-user for Fxuser
                     Contractor: {
                         create: {
                             email: EmailAddress,

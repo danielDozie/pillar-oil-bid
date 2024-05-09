@@ -7,13 +7,15 @@ const { data } = Astro.props;
 const tenderExpiringSoon = await data?.tenderExpiringSoon();
 ---
 
-<div class="flex flex-col gap-x-4 ml-20 w-[calc(100%-5rem)] px-4 mt-24 mb-8">
+<div class="flex flex-col gap-x-4 ml-20 md:w-[calc(100%-5rem)] px-4 mt-24 mb-8">
   <div>
     <h1 class="font-semibold text-2xl text-foreground my-8">Dashboard</h1>
   </div>
 
-  <div class="flex gap-x-6">
-    <div class="w-1/4 bg-slate-100 dark:bg-natural rounded-lg p-4 shadow-md">
+  <div class="grid grid-cols-2 grid-rows-2 md:flex gap-4 md:gap-x-6">
+    <div
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural rounded-lg p-4 shadow-md"
+    >
       <h2 class="font-semibold text-foreground text-lg mb-2">Active Tenders</h2>
       <span class="flex justify-between">
         <p class="text-gray-500 dark:text-gray-300 text-4xl font-bold">
@@ -27,7 +29,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       </span>
     </div>
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">Total Tenders</h2>
       <span class="flex justify-between">
@@ -42,7 +44,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       </span>
     </div>
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">Accepted/Rejected</h2>
       <span class="flex justify-between">
@@ -57,7 +59,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       </span>
     </div>
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">Active Tenders (No Bids)</h2>
       <span class="flex justify-between">
@@ -73,9 +75,9 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
     </div>
   </div>
 
-  <div class="flex gap-x-6 mt-12">
+  <div class="grid grid-cols-2 grid-rows-2 md:flex gap-4 md:gap-x-6 mt-12">
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">Vendors</h2>
       <span class="flex justify-between">
@@ -90,7 +92,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       </span>
     </div>
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">Verified vendors</h2>
       <span class="flex justify-between">
@@ -105,7 +107,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       </span>
     </div>
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">{``}</h2>
       <span class="flex justify-between">
@@ -118,7 +120,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       </span>
     </div>
     <div
-      class="w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
+      class="w-full md:w-1/4 bg-slate-100 dark:bg-natural font-semibold text-foreground rounded-lg p-4 shadow-md"
     >
       <h2 class="font-semibold text-lg mb-2">{``}</h2>
       <span class="flex justify-between">
@@ -137,7 +139,7 @@ const tenderExpiringSoon = await data?.tenderExpiringSoon();
       Tenders expiring soon
     </h3>
     <table
-      class="w-full border-collapse border border-gray-200 dark:border-gray-700 text-foreground"
+      class="w-full border-collapse border border-gray-200 dark:border-gray-700 text-foreground table-auto"
     >
       <thead>
         <tr class="bg-slate-100 dark:bg-primary text-foreground text-left">

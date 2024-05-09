@@ -89,7 +89,7 @@ export function BidsDataTable({ data }: { data: any }) {
             accessorKey: "id",
             header: "Id",
             cell: ({ row }) => (
-                <div className="capitalize">{`POL-RFX-B${row.getValue("id") }`}</div>
+                <div className="capitalize">{`POL-eRFX-T${row.getValue("id") }`}</div>
             ),
         },
         {
@@ -162,7 +162,7 @@ export function BidsDataTable({ data }: { data: any }) {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <a href={`/u/user/bids/manage/${Number(row.original.id)}`}>Manage Bid</a>
+                                <a href={`/u/user/tenders/manage/${Number(row.original.id)}`}>Manage Tender</a>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
