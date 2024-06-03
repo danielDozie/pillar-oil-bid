@@ -12,5 +12,7 @@ export default defineConfig({
   integrations: [react(), tailwind({
     applyBaseStyles: false
   }), icon()],
-  adapter: vercel()
+  adapter: vercel({
+    maxDuration: 60,
+  })
 });
