@@ -1,4 +1,5 @@
 import { FROM_NAME, RESEND_OTP_HTML } from "@/constants/notifications/email";
+import { transporter } from "@/utilities/helpers/emailTransporter";
 import type { APIRoute } from "astro";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer"
@@ -23,18 +24,6 @@ export const GET: APIRoute = async ({ cookies, request }) => {
     }
     // Perform OTP verification before redirecting
     const otp = Math.floor(1000 + Math.random() * 9000); // Generate 4 digit OTP
-
-    // Create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: process.env.MAIL_USERNAME,
-            pass: process.env.MAIL_PASSWORD,
-        },
-    });
-
 
     // // Send mail with defined transport object
     let info = await transporter.sendMail({

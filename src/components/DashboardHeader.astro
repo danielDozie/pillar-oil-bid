@@ -4,6 +4,7 @@ import { Input } from "./ui/react/input";
 import Text from "./Text.astro";
 import { Switch } from "./ui/react/switch";
 import { AvatarComponent } from "@/components/ui/react/avatar-component";
+import { Headers } from "@/constants";
 
 const { role } = Astro.props;
 //@ts-ignore
@@ -11,7 +12,7 @@ const name = Astro.locals?.user?.companyName || Astro.locals?.user?.firstName;
 //@ts-ignore
 const userRole = Astro.locals?.user?.user?.role;
 
-const res = await fetch(`${import.meta.env.API_ENDPOINT}/v1/settings`);
+const res = await fetch(`${import.meta.env.API_ENDPOINT}/v1/settings`, {headers: Headers});
 const { data } = await res?.json();
 const appLogo = data?.settings[0].appLogo;
 const appName = data?.settings[0].appName;

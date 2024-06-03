@@ -1,9 +1,11 @@
 ---
-import { HEADER_TOKEN } from "@/constants";
+import { HEADER_TOKEN, Headers } from "@/constants";
 import AdminLayout from "../../../layouts/AdminLayout.astro";
 import SettingsComponent from "@/components/ui/react/settings-component";
 
-const res = await fetch(`${import.meta.env.API_ENDPOINT}/v1/settings`);
+const res = await fetch(`${import.meta.env.API_ENDPOINT}/v1/settings`, {
+  headers: Headers
+});
 
 const { data } = await res?.json();
 

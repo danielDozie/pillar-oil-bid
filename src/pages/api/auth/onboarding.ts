@@ -1,8 +1,9 @@
 import { FROM_NAME, ONBOARDING_COMPLETE_HTML } from "@/constants/notifications/email";
+import { transporter } from "@/utilities/helpers/emailTransporter";
 import { PrismaClient } from "@prisma/client";
 import type { APIRoute } from "astro";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer"
+
 
 const prisma = new PrismaClient()
 
@@ -34,18 +35,9 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                 }}
             });
 
-            if (user?.id) {
-                // Create reusable transporter object using the default SMTP transport
-                let transporter = nodemailer.createTransport({
-                    host: process.env.MAIL_HOST,
-                    port: 587,
-                    secure: false, // true for 465, false for other ports
-                    auth: {
-                        user: process.env.MAIL_USERNAME,
-                        pass: process.env.MAIL_PASSWORD,
-                    },
-                });
+            console.log({user})
 
+            if (user?.id) {
                 // Send mail with defined transport object
                 let info = await transporter.sendMail({
                     from: `${FROM_NAME} <${process.env.MAIL_USERNAME}>`, // Sender address
@@ -90,17 +82,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                     },
                 });
                 if (updateUserRole.id) {
-                    // Create reusable transporter object using the default SMTP transport
-                    let transporter = nodemailer.createTransport({
-                        host: process.env.MAIL_HOST,
-                        port: 587,
-                        secure: false, // true for 465, false for other ports
-                        auth: {
-                            user: process.env.MAIL_USERNAME,
-                            pass: process.env.MAIL_PASSWORD,
-                        },
-                    });
-
+                    
                     // Send mail with defined transport object
                     let info = await transporter.sendMail({
                         from: `${FROM_NAME}  <${process.env.MAIL_USERNAME}>`, // Sender address
@@ -120,13 +102,12 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
             };
         } else {
-            return;
+            return redirect("/auth/onboarding");
         }
 
     } catch (error) {
         console.log(error)
     }
 
-    return redirect("/auth/onboarding");
 }
 
