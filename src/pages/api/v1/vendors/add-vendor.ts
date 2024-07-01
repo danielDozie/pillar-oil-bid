@@ -8,13 +8,14 @@ import { ADD_VENDOR_HTML, FROM_NAME } from '@/constants/notifications/email';
 // Generate a salt for hashing passwords
 const salt = bcrypt.genSaltSync(10);
 
+
 /**
  * Handles the POST request to sign up a new user.
  * 
  * @param {object} context - The request context, including request and redirect functions.
  * @returns A redirect response to the root path '/'.
  */
-export const POST: APIRoute = async ({ request, redirect }) => {
+export const POST: APIRoute = async ({ request }) => {
     // Parse the form data from the request
     const data = await request.json();
 
@@ -29,8 +30,6 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     const password = bcrypt.hashSync(generatedPass, salt);
 
     const token = btoa(JSON.stringify({ password, email }));
-
-    console.log({data})
 
     try {
         // Create a new user in the database
@@ -59,23 +58,22 @@ export const POST: APIRoute = async ({ request, redirect }) => {
                 text: `Welcome to POL eRFX`, // Plain text body
                 html: ADD_VENDOR_HTML(companyName, token)
             });
-
             if (info.messageId) {
                 return new Response(JSON.stringify({ message: "Vendor added succesfully." }), {
                     status: 200
                 });
-            }
-        }
+            };
+        };
 
     } catch (error) {
         console.log(error)
         // Log the error to the console for debugging
-        return new Response(JSON.stringify({message: "Add vendor failed!"}), {
+        return new Response(JSON.stringify({ message: "Add vendor failed!" }), {
             status: 404,
             statusText: 'Add vendor failed'
         });
-    }
+    };
 
     // Redirect to path after successful signup or error
     return;
-}
+};

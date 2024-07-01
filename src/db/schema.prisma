@@ -1,25 +1,30 @@
 generator client {
   provider        = "prisma-client-js"
-  binaryTargets   = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
   previewFeatures = ["relationJoins"]
+  binaryTargets   = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Bid {
-  id              Int         @id @default(autoincrement())
-  contractorId    Int         @map("contractor_id")
-  tenderId        Int         @map("tender_id")
+  id              Int        @id @default(autoincrement())
   status          String
-  submissionDate  DateTime    @map("submission_date")
-  lastUpdatedDate DateTime    @updatedAt @map("last_updated")
-  contractor      Contractor? @relation(fields: [contractorId], references: [id])
-  tender          Tender?     @relation(fields: [tenderId], references: [id])
+  submissionDate  DateTime   @map("submission_date")
+  lastUpdatedDate DateTime   @updatedAt @map("last_updated")
+  contractorId    Int        @map("contractor_id")
+  tenderId        Int        @map("tender_id")
+  xata_id         String     @unique(map: "bid__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version    Int        @default(0)
+  xata_createdat  DateTime   @default(now()) @db.Timestamptz(6)
+  xata_updatedat  DateTime   @default(now()) @db.Timestamptz(6)
+  contractor      Contractor @relation(fields: [contractorId], references: [id])
+  tender          Tender     @relation(fields: [tenderId], references: [id])
 
-  @@index([contractorId], name: "idx_bid_contractorId")
+  @@index([contractorId], map: "idx_bid_contractorId")
   @@map("bid")
 }
 
@@ -30,26 +35,34 @@ model Tender {
   location        String
   startDate       DateTime
   endDate         DateTime
-  items           Item[]
-  files           File[]
-  recipients      Recipients[]
-  bids            Bid[]
   status          String
   submissionDate  DateTime       @map("submission_date")
   lastUpdatedDate DateTime       @updatedAt @map("last_updated")
+  xata_id         String         @unique(map: "tender__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version    Int            @default(0)
+  xata_createdat  DateTime       @default(now()) @db.Timestamptz(6)
+  xata_updatedat  DateTime       @default(now()) @db.Timestamptz(6)
+  bids            Bid[]
   BidPlacement    BidPlacement[]
+  files           File[]
+  items           Item[]
+  recipients      Recipients[]
 
   @@map("tender")
 }
 
 model Item {
-  id       Int     @id @default(autoincrement())
-  name     String
-  quantity Int
-  unit     String?
-  cost     String?
-  tenderId Int     @map("tender_id")
-  tender   Tender? @relation(fields: [tenderId], references: [id])
+  id             Int      @id @default(autoincrement())
+  name           String
+  cost           String?
+  unit           String?
+  tenderId       Int      @map("tender_id")
+  quantity       Int
+  xata_id        String   @unique(map: "item__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int      @default(0)
+  xata_createdat DateTime @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime @default(now()) @db.Timestamptz(6)
+  tender         Tender   @relation(fields: [tenderId], references: [id])
 
   @@map("item")
 }
@@ -60,157 +73,191 @@ model File {
   size           Int
   path           String
   tenderId       Int?          @map("tender_id")
-  tender         Tender?       @relation(fields: [tenderId], references: [id])
-  // Relation back to BidPlacement
   bidPlacementId Int?          @map("bid_placement_id")
-  bidPlacement   BidPlacement? @relation(fields: [bidPlacementId], references: [id], name: "BidPlacementFiles")
+  xata_version   Int           @default(0)
+  xata_createdat DateTime      @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime      @default(now()) @db.Timestamptz(6)
+  xata_id        String        @unique(map: "file__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  bidPlacement   BidPlacement? @relation("BidPlacementFiles", fields: [bidPlacementId], references: [id])
+  tender         Tender?       @relation(fields: [tenderId], references: [id])
 
   @@map("file")
 }
 
 model Contractor {
   id                 Int            @id @default(autoincrement())
-  companyName        String?        @map("company_name")
+  userId             Int?           @unique
   email              String?        @unique
-  homePhone          String?        @map("home_phone")
   businessPhone      String?        @map("business_phone")
-  address             String?       
+  companyName        String?        @map("company_name")
+  homePhone          String?        @map("home_phone")
   falconRegistration Boolean        @default(false) @map("falcon_registration")
-  userId             Int?
-  user               User?          @relation(fields: [userId], references: [id])
+  address            String?
+  xata_version       Int            @default(0)
+  xata_createdat     DateTime       @default(now()) @db.Timestamptz(6)
+  xata_updatedat     DateTime       @default(now()) @db.Timestamptz(6)
+  xata_id            String         @unique(map: "contractor__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   Bid                Bid[]
-  recipient          Recipients[]
   BidPlacement       BidPlacement[]
+  user               User?          @relation(fields: [userId], references: [id])
+  recipient          Recipients[]
 
-  @@unique([userId], name: "user_id")
   @@map("contractor")
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique
-  password   String
-  role       String?     @default("user")
-  verified   Boolean     @default(false)
-  Contractor Contractor?
-  fxBidder   Fxbidder?
+  id             Int         @id @default(autoincrement())
+  email          String      @unique
+  password       String
+  role           String?     @default("user")
+  verified       Boolean     @default(false)
+  xata_createdat DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime    @default(now()) @db.Timestamptz(6)
+  xata_id        String      @unique(map: "user__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int         @default(0)
+  Contractor     Contractor?
+  fxBidder       Fxbidder?
 
   @@map("user")
 }
 
 model Recipients {
-  id           Int         @id @default(autoincrement())
-  contractorId Int?        @map("contractor_id")
-  contractor   Contractor? @relation(fields: [contractorId], references: [id])
-  tenderId     Int?        @map("tender_id")
-  tender       Tender?     @relation(fields: [tenderId], references: [id])
+  id             Int         @id @default(autoincrement())
+  contractorId   Int?        @map("contractor_id")
+  tenderId       Int?        @map("tender_id")
+  xata_id        String      @unique(map: "recipients__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int         @default(0)
+  xata_createdat DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime    @default(now()) @db.Timestamptz(6)
+  contractor     Contractor? @relation(fields: [contractorId], references: [id])
+  tender         Tender?     @relation(fields: [tenderId], references: [id])
 
   @@map("recipients")
 }
 
 model Settings {
-  id      Int    @id
-  appName String? @map("app_name")
-  appUrl  String? @map("app_url")
-  appLogo String? @map("app_logo")
-  smtpHost String? @map("smtp_host")
-  smtpUser String? @map("smtp_user")
-  smtpPassword String? @map("smtp_password")
-  smtpPort String? @map("smtp_port")
+  id             Int      @id
+  appName        String?  @map("app_name")
+  appUrl         String?  @map("app_url")
+  appLogo        String?  @map("app_logo")
+  smtpHost       String?  @map("smtp_host")
+  smtpPassword   String?  @map("smtp_password")
+  smtpPort       String?  @map("smtp_port")
+  smtpUser       String?  @map("smtp_user")
+  xata_id        String   @unique(map: "settings__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int      @default(0)
+  xata_createdat DateTime @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime @default(now()) @db.Timestamptz(6)
 
   @@map("settings")
 }
 
 model Fxbidder {
-  id            Int     @id @default(autoincrement())
-  firstName     String? @map("first_name")
-  lastName      String? @map("last_name")
-  email         String? @unique
-  businessPhone String? @map("business_phone")
-
-  userId         Int?
-  user           User?            @relation(fields: [userId], references: [id])
+  id             Int              @id @default(autoincrement())
+  firstName      String?          @map("first_name")
+  lastName       String?          @map("last_name")
+  email          String?          @unique
+  businessPhone  String?          @map("business_phone")
+  userId         Int?             @unique
+  xata_id        String           @unique(map: "fx_bidder__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int              @default(0)
+  xata_createdat DateTime         @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime         @default(now()) @db.Timestamptz(6)
   FxRecipients   FxRecipients[]
   FxBid          FxBid[]
   FxBidPlacement FxBidPlacement[]
+  user           User?            @relation(fields: [userId], references: [id])
 
-  @@unique([userId], name: "user_id")
   @@map("fx_bidder")
 }
 
 model Fx {
-  id              Int      @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
   title           String
-  currency        String
   amount          String
-  startTime       DateTime @map("start_time")
-  endTime         DateTime @map("end_time")
-  note            String
   status          String
-  submissionDate  DateTime @map("submission_date")
-  lastUpdatedDate DateTime @updatedAt @map("last_updated")
-
-  FxRecipients FxRecipients[]
-  FxBid        FxBid[]
+  submissionDate  DateTime       @map("submission_date")
+  lastUpdatedDate DateTime       @updatedAt @map("last_updated")
+  currency        String
+  endTime         DateTime       @map("end_time")
+  note            String
+  startTime       DateTime       @map("start_time")
+  xata_id         String         @unique(map: "fx__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version    Int            @default(0)
+  xata_createdat  DateTime       @default(now()) @db.Timestamptz(6)
+  xata_updatedat  DateTime       @default(now()) @db.Timestamptz(6)
+  FxRecipients    FxRecipients[]
+  FxBid           FxBid[]
 
   @@map("fx")
 }
 
 model FxRecipients {
-  id         Int       @id @default(autoincrement())
-  fxBidderId Int?      @map("fx_bidder_id")
-  fxBidder   Fxbidder? @relation(fields: [fxBidderId], references: [id])
-  fxId       Int?      @map("fx_id")
-  fx         Fx?       @relation(fields: [fxId], references: [id])
+  id             Int       @id @default(autoincrement())
+  fxBidderId     Int?      @map("fx_bidder_id")
+  fxId           Int?      @map("fx_id")
+  xata_createdat DateTime  @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime  @default(now()) @db.Timestamptz(6)
+  xata_id        String    @unique(map: "fx-recipients__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int       @default(0)
+  fxBidder       Fxbidder? @relation(fields: [fxBidderId], references: [id])
+  fx             Fx?       @relation(fields: [fxId], references: [id])
 
   @@map("fx-recipients")
 }
 
 model BidPlacement {
-  id               Int      @id @default(autoincrement())
-  documentPassword String?   @map("document_password")
-  status           String   @default("placed")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  // Relationships
-  contractorId Int        @map("contractor_id")
-  contractor   Contractor @relation(fields: [contractorId], references: [id])
-  tenderId     Int        @map("tender_id")
-  tender       Tender     @relation(fields: [tenderId], references: [id])
-  files        File[]     @relation("BidPlacementFiles")
+  id               Int        @id @default(autoincrement())
+  status           String     @default("placed")
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  documentPassword String?    @map("document_password")
+  contractorId     Int        @map("contractor_id")
+  tenderId         Int        @map("tender_id")
+  xata_id          String     @unique(map: "bid_placements__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version     Int        @default(0)
+  xata_createdat   DateTime   @default(now()) @db.Timestamptz(6)
+  xata_updatedat   DateTime   @default(now()) @db.Timestamptz(6)
+  contractor       Contractor @relation(fields: [contractorId], references: [id])
+  tender           Tender     @relation(fields: [tenderId], references: [id])
+  files            File[]     @relation("BidPlacementFiles")
 
   @@map("bid_placements")
 }
 
 model FxBid {
-  id        Int      @id @default(autoincrement())
-  fxId      Int      @map("fx_id")
-  bidderId  Int      @map("bidder_id")
-  amount    String
-  status    String   @default("pending")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relationships
-  fx             Fx               @relation(fields: [fxId], references: [id])
+  id             Int              @id @default(autoincrement())
+  fxId           Int              @map("fx_id")
+  bidderId       Int              @map("bidder_id")
+  amount         String
+  status         String           @default("pending")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  xata_id        String           @unique(map: "fx_bid__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int              @default(0)
+  xata_createdat DateTime         @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime         @default(now()) @db.Timestamptz(6)
   bidder         Fxbidder         @relation(fields: [bidderId], references: [id])
+  fx             Fx               @relation(fields: [fxId], references: [id])
   FxBidPlacement FxBidPlacement[]
 
   @@map("fx_bid")
 }
 
 model FxBidPlacement {
-  id        Int      @id @default(autoincrement())
-  status    String   @default("placed")
-  amount    String
-  fxBidId   Int      @map("fx_bid_id")
-  bidderId  Int      @map("bidder_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  // Relationships
-  fxBid     FxBid    @relation(fields: [fxBidId], references: [id])
-  bidder    Fxbidder @relation(fields: [bidderId], references: [id])
+  id             Int      @id @default(autoincrement())
+  status         String   @default("placed")
+  amount         String
+  bidderId       Int      @map("bidder_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  fxBidId        Int      @map("fx_bid_id")
+  xata_version   Int      @default(0)
+  xata_createdat DateTime @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime @default(now()) @db.Timestamptz(6)
+  xata_id        String   @unique(map: "fx_bid_placement__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  bidder         Fxbidder @relation(fields: [bidderId], references: [id])
+  fxBid          FxBid    @relation(fields: [fxBidId], references: [id])
 
   @@map("fx_bid_placement")
 }
